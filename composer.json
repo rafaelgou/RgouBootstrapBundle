@@ -20,8 +20,8 @@
         "symfony/framework-bundle": ">=2.1,<2.2-dev"
     },
     "autoload": {
-        "psr-0": { "Rgou\\BoostrapBundle": "" }
+        "psr-0": { "Rgou\\BootstrapBundle": "" }
     },
     "minimum-stability": "dev",
-    "target-dir": "Rgou/BoostrapBundle"
+    "target-dir": "Rgou/BoosttrapBundle"
 }

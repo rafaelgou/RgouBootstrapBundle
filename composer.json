@@ -23,5 +23,5 @@
         "psr-0": { "Rgou\\BootstrapBundle": "" }
     },
     "minimum-stability": "dev",
-    "target-dir": "Rgou/BoosttrapBundle"
+    "target-dir": "Rgou/BootstrapBundle"
 }

@@ -1,0 +1,7 @@
+parameters:
+#    rgou_bootstrap.example.class: Rgou\BootstrapBundle\Example
+
+services:
+#    rgou_bootstrap.example:
+#        class: %rgou_bootstrap.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

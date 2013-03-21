@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+
+    {% block head_stylesheets %}
+    {# Main Stylesheets #}
+    {% endblock head_stylesheets %}
+    
+    {% block stylesheets %}
+    {# Additional Stylesheets #}
+    {% endblock stylesheets %}
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    {% block head_javascripts %}
+    {# Additional Javascripts on head #}
+    {% endblock head_javascripts %}
+    
+    <title>{% block title %}Rgou Bootstrap Bundle{% endblock title %}</title>
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
+    
+    {% block head_extra %}
+    {% endblock head_extra %}
+    
+</head>
+<body>
+{% block body %}
+    {# Top Navigation Bar #}
+    {% block navbar_top %}    
+    {% endblock navbar_top %}
+    {# Bottom Navigation Bar #}
+    {% block navbar_bottom %}    
+    {% endblock navbar_bottom %}
+    {% block container %}
+        
+    <div class="{% block container_class %}container-fluid{% endblock container_class %}">
+
+        <div class="content">
+            {% block page_header %}
+            <div class="page-header">
+                  <h1>{% block headline %}Mopa Bootstrap Bundle{% endblock headline %}</h1>
+            </div>
+            {% endblock page_header %}            
+            
+            {% block content %}
+            {% endblock content %}
+                
+        </div>
+        
+        <footer>
+            {% block footer %}
+                <p><a href="http://github.com/rafaelgou/RgouBootstrapBundle" target="_blank">Rgou Bootstrap Bundle</a> &copy; <a href="http://tech.rgou.net" target="_blank">Rafael Goulart</a> 2013</p>
+            {% endblock footer %}
+        </footer>
+    </div>
+    {% endblock container %}
+    {% block footer_javascripts %}
+    {# Main Javascripts on footer #}
+    {% endblock footer_javascripts %}     
+    {% block javascripts %}
+    {# Additional Javascripts on footer #}
+    {% endblock javascripts %}
+{% endblock body %}
+</body>
+</html>

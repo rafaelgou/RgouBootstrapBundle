@@ -1,0 +1,47 @@
+{% extends 'RgouBootstrapBundle::base.html.twig' %}
+
+{% block head_stylesheets %}
+    {% stylesheets
+    'bundles/rgoubootstrap/bootstrap/css/bootstrap-combined.no-icons.min.css'
+    'bundles/rgoubootstrap/bootstrap/css/bootstrap-responsive.min.css'
+    'bundles/rgoubootstrap/font-awesome/css/font-awesome.min.css'
+    output='css/compiled.css'
+    filter='cssrewrite' 
+    filter='yui_css' 
+    %}
+    <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen" />
+    {% endstylesheets %}
+    <style type="text/css">
+        html, body {
+            height: 100%;
+        }
+        body {
+            padding-top: 50px;
+            /*padding-bottom: 50px;*/
+        }
+    </style>
+{% endblock head_stylesheets %}
+
+{% block head_javascripts %}
+{# Additional Javascripts on head #}
+{% endblock head_javascripts %}
+
+{# Top Navigation Bar #}
+{% block navbar_top %}    
+{% endblock navbar_top %}
+
+{# Bottom Navigation Bar #}
+{% block navbar_bottom %}    
+{% endblock navbar_bottom %}
+
+{% block footer_javascripts %}
+    {% javascripts
+        'bundles/rgoubootstrap/js/jquery.min.js'
+        'bundles/rgoubootstrap/bootstrap/js/bootstrap.min.js'
+        filter='yui_js' 
+        output='js/compiled.js'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+{% endblock footer_javascripts %}     
+

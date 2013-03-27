@@ -4,15 +4,7 @@
         <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.no-icons.min.css" type="text/css" rel="stylesheet" media="screen" />
         <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" type="text/css" rel="stylesheet" media="screen" />
         <link href="http://netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css" type="text/css" rel="stylesheet" media="screen" />
-        <style type="text/css">
-            html, body {
-                height: 100%;
-            }
-            body {
-                padding-top: 50px;
-                /*padding-bottom: 50px;*/
-            }
-        </style>
+        <link href="" type="text/css" rel="stylesheet" media="screen" />
 {% endblock head_stylesheets %}
 
 {% block head_javascripts %}
@@ -20,7 +12,8 @@
 {% endblock head_javascripts %}
 
 {# Top Navigation Bar #}
-{% block navbar_top %}    
+{% block navbar_top %}
+{{ knp_menu_render('RgouBootstrapBundle:Builder:mainMenu', {'currentClass': 'active'}) }}        
 {% endblock navbar_top %}
 
 {# Bottom Navigation Bar #}

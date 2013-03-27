@@ -30,7 +30,7 @@
     {% block navbar_top %}    
     {% endblock navbar_top %}
     {# Bottom Navigation Bar #}
-    {% block navbar_bottom %}    
+    {% block navbar_bottom %}
     {% endblock navbar_bottom %}
     {% block container %}
         
@@ -47,13 +47,17 @@
             {% endblock content %}
                 
         </div>
+
         
-        <footer>
-            {% block footer %}
-                <p><a href="http://github.com/rafaelgou/RgouBootstrapBundle" target="_blank">Rgou Bootstrap Bundle</a> &copy; <a href="http://tech.rgou.net" target="_blank">Rafael Goulart</a> 2013</p>
-            {% endblock footer %}
-        </footer>
     </div>
+        
+    <footer class="footer">
+        {% block footer %}
+            <div class="container-fluid">
+                <p><a href="http://github.com/rafaelgou/RgouBootstrapBundle" target="_blank">Rgou Bootstrap Bundle</a> &copy; <a href="http://tech.rgou.net" target="_blank">Rafael Goulart</a> 2013</p>
+            </div>                
+        {% endblock footer %}
+    </footer>
     {% endblock container %}
     {% block footer_javascripts %}
     {# Main Javascripts on footer #}

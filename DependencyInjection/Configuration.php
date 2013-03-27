@@ -20,9 +20,12 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('rgou_bootstrap');
 
-        // Here you should define the parameters that are allowed to
-        // configure your bundle. See the documentation linked above for
-        // more information on that topic.
+        $rootNode
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->scalarNode('template')->defaultValue('RgouBootstrapBundle::layout_local.html.twig')->end()
+                ->scalarNode('block')->defaultValue('content')->end()
+            ->end();
 
         return $treeBuilder;
     }

@@ -24,8 +24,8 @@
     {% endblock head_extra %}
     
 </head>
-<body>
 {% block body %}
+<body {% block body_attributes %}{% endblock body_attributes %}>
     {# Top Navigation Bar #}
     {% block navbar_top %}    
     {% endblock navbar_top %}
@@ -47,7 +47,6 @@
             {% endblock content %}
                 
         </div>
-
         
     </div>
         
@@ -65,6 +64,6 @@
     {% block javascripts %}
     {# Additional Javascripts on footer #}
     {% endblock javascripts %}
-{% endblock body %}
 </body>
+{% endblock body %}
 </html>

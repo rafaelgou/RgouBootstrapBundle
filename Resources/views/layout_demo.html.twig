@@ -1,0 +1,63 @@
+{% extends 'RgouBootstrapBundle::base.html.twig' %}
+{% set container_class = 'container' %}
+
+{% block head_stylesheets %}
+    {% stylesheets
+    'bundles/rgoubootstrap/bootstrap/css/bootstrap-combined.no-icons.min.css'
+    'bundles/rgoubootstrap/bootstrap/css/bootstrap-responsive.min.css'
+    'bundles/rgoubootstrap/font-awesome/css/font-awesome.min.css'
+    'bundles/rgoubootstrap/css/main.css'
+    output='css/compiled-demo.css'
+    filter='cssrewrite' 
+    filter='yui_css' 
+    %}
+    <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen" />
+    {% endstylesheets %}
+    <link href="{{ asset('bundles/rgoubootstrap/bootstrap/css/docs.css') }}" rel="stylesheet">
+    <link href="{{ asset('bundles/rgoubootstrap/bootstrap/js/google-code-prettify/prettify.css') }}" rel="stylesheet">
+    
+{% endblock head_stylesheets %}
+
+{% block body_attributes %}data-spy="scroll" data-target=".bs-docs-sidebar"{% endblock body_attributes %}
+
+{% block navbar_top %}
+<div class="navbar navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="{{ container_class }}">
+            
+            <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>            
+            
+            <a class="brand" href="{{ path('rgou_bootstrap') }}">Rgou Bootstrap</a>
+            <!-- Everything you want hidden at 940px or less, place within here -->
+            <div class="nav-collapse collapse">
+                {{ knp_menu_render('RgouBootstrapBundle:Builder:demoBootstrapMenu', {'currentClass': 'active', 'template': 'RgouBootstrapBundle:Menu:knp_menu.html.twig'}) }}
+            </div>            
+            
+        </div>
+    </div>
+</div>     
+{% endblock navbar_top %}   
+    
+{% block container %}{% endblock container %}
+    
+{% block footer_javascripts %}
+    {% javascripts
+        'bundles/rgoubootstrap/js/jquery.min.js'
+        'bundles/rgoubootstrap/bootstrap/js/bootstrap.min.js'
+        filter='yui_js' 
+        output='js/compiled.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+    <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+    <script type="text/javascript" src="{{ asset('bundles/rgoubootstrap/bootstrap/js/application.js') }}"></script>
+    <script src="{{ asset('bundles/rgoubootstrap/bootstrap/js/holder/holder.js') }}"></script>
+    <script src="{{ asset('bundles/rgoubootstrap/bootstrap/js/google-code-prettify/prettify.js') }}"></script>       
+
+{% endblock footer_javascripts %} 
+       

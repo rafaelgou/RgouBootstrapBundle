@@ -1,9 +1,10 @@
-{{ "{% form_theme edit_form 'ToaTwitterBootstrapBundle:Form:widgets.html.twig' %}" }}
+{{ "{% form_theme edit_form 'RgouBootstrapBundle:Form:widgets.html.twig' %}" }}
 
 {{ "{% extends '" ~ rgou_bootstrap.template ~ "' %}" }}
-{{ "{% block " ~ rgou_bootstrap.block ~ " %}" }}
 
-<h1 class="page-header">{{ "{{ '" ~ entity ~ "'|trans }} {{ 'edit'|trans }}" }}</h1>
+{{ '{% block headline %}' }}{{ "{{ '" ~ entity ~ "'|trans }} {{ 'edit'|trans }}" }}{{ '{% endblock headline %}' }}
+
+{{ "{% block " ~ rgou_bootstrap.block ~ " %}" }}
 
 <form class="form-horizontal" action="{{ "{{ path('"~ route_name_prefix ~"_update', { 'id': entity.id }) }}" }}" method="post" {{ "{{ form_enctype(edit_form) }}" }}>
     {{ "{{ form_widget(edit_form) }}" }}

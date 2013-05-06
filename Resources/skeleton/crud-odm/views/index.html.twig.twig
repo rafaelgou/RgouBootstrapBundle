@@ -1,0 +1,71 @@
+{{ "{% extends '" ~ rgou_bootstrap.template ~ "' %}" }}
+
+{{ '{% block headline %}' }}{{ "{{ '" ~ entity ~ "'|trans }}" }} {{ "{{ 'list'|trans }}" }}{{ '{% endblock headline %}' }}
+
+{{ "{% block " ~ rgou_bootstrap.block ~ " %}" }}
+
+<table class="records_list table table-bordered table-condensed table-striped">
+    <thead>
+        <tr>
+        {%- for field, metadata in fields %}
+
+            <th>{{ "{{ '" ~ field|capitalize ~ "'|trans }}" }}</th>
+
+        {%- endfor %}
+
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    {{ '{% for document in documents %}' }}
+        <tr>
+
+    {%- for field, metadata in fields %}
+        {%- if loop.first and ('show' in actions) %}
+
+            <td><a href="{{ "{{ path('"~ route_name_prefix ~"_show', { 'id': document.id }) }}" }}">{{ '{{ document.'~ field|replace({'_': ''}) ~' }}' }}</a></td>
+
+        {%- elseif metadata.type in ['datetimetz', 'datetime'] %}
+
+            <td>{{ '{% if document.'~ field|replace({'_': ''}) ~' %}{{ document.'~ field|replace({'_': ''}) ~'|date(\'Y-m-d H:i:s\') }}{% endif %}' }}</td>
+
+        {%- elseif metadata.type == 'date' %}
+
+            <td>{{ '{% if document.'~ field|replace({'_': ''}) ~' %}{{ document.'~ field|replace({'_': ''}) ~'|date(\'Y-m-d\') }}{% endif %}' }}</td>
+
+        {%- elseif metadata.type == 'time' %}
+
+            <td>{{ '{% if document.'~ field|replace({'_': ''}) ~' %}{{ document.'~ field|replace({'_': ''}) ~'|date(\'H:i:s\') }}{% endif %}' }}</td>
+
+        {%- elseif metadata.type == 'boolean' %}
+
+            <td><i class="{{ '{{ document.'~ field|replace({'_': ''}) ~' ? \'icon-check\' : \'\' }}' }}"></i></td>
+
+        {%- else %}
+
+            <td>{{ '{{ document.'~ field|replace({'_': ''}) ~' }}' }}</td>
+
+        {%- endif %}
+
+        {%- if loop.last %}
+
+            <td>
+                {%- include "views/others/actions.html.twig.twig" %}
+            </td>
+
+        {%- endif %}
+    {%- endfor %}
+
+        </tr>
+    {{ '{% endfor %}' }}
+    </tbody>
+</table>
+
+{% if 'new' in actions %}
+<a class="btn" href="{{ "{{ path('"~ route_name_prefix ~"_new') }}" }}">
+    <i class="icon-plus"></i>
+    {{ "{{ 'create a new entry'|trans }}" }}
+</a>
+{% endif %}
+
+{{ "{% endblock %}" }}

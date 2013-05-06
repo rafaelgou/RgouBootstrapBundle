@@ -1,7 +1,8 @@
 {{ "{% extends '" ~ rgou_bootstrap.template ~ "' %}" }}
-{{ "{% block " ~ rgou_bootstrap.block ~ " %}" }}
 
-<h1 class="page-header">{{ "{{ '" ~ entity ~ "'|trans }}" }}</h1>
+{{ '{% block headline %}' }}{{ "{{ '" ~ entity ~ "'|trans }}" }}{{ '{% endblock headline %}' }}
+
+{{ "{% block " ~ rgou_bootstrap.block ~ " %}" }}
 
 <table class="record_properties table table-bordered table-condensed table-striped">
     <tbody>

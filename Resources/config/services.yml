@@ -9,7 +9,6 @@ services:
         tags:
             - { name: twig.extension }  
   
-  
     rgou_bootstrap.menu_builder:
         class: Rgou\BootstrapBundle\Menu\MenuBuilder
         arguments: ["@knp_menu.factory"]

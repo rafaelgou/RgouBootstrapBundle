@@ -31,6 +31,7 @@ class GenerateDoctrineCrudCommand extends BaseGenerateDoctrineCrudCommand
         parent::configure();
         $this
             ->setName('rgou:generate:bootstrap-crud')
+            ->setDescription('Generates a CRUD based on a Doctrine entity with Twitter Boostrap Theme')
             ->setAliases(array());
     }
 

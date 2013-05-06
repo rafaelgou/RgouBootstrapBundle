@@ -1,0 +1,14 @@
+{% extends 'RgouBootstrapBundle::layout_local.html.twig' %}
+
+{% block head_stylesheets %}
+    {% stylesheets
+    'bundles/rgoubootstrap/bootswatch/cyborg/bootstrap.min.css'
+    'bundles/rgoubootstrap/bootstrap/css/bootstrap-responsive.min.css'
+    'bundles/rgoubootstrap/css/main.css'
+    output='css/compiled-cyborg.css'
+    filter='cssrewrite' 
+    filter='yui_css' 
+    %}
+    <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen" />
+    {% endstylesheets %}
+{% endblock head_stylesheets %}

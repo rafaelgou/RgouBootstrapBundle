@@ -18,7 +18,8 @@ Both are great jobs! I just want to merge some features in a more personal way.
 
 ## Included Features
 
-* Basic layouts using CDN or local assets
+* Basic layouts using CDN (from [BootstrapCDN](http://www.bootstrapcdn.com/)) or local assets
+* Local and CDN Bootswatch(http://bootswatch.com/) themes
 * A generic Navbar class to generate your Navbar outside the template
   * helpers for dropdowns, seperators, etc. (from [MopaBootstrapBundle](https://github.com/phiamo/MopaBootstrapBundle))
 * twig templates for KnpPaginatorBundle (https://github.com/knplabs/KnpPaginatorBundle)
@@ -53,29 +54,41 @@ Both are great jobs! I just want to merge some features in a more personal way.
 		);
 	}
 
+### Public the assets
+
+    app/console assets:install --symlink
+
+### Prepare Assetic
+
+Get YUI Compresor:
+
+    cd /tmp
+    wget https://github.com/downloads/yui/yuicompressor/yuicompressor-2.4.7.zip
+    unzip yuicompressor-2.4.7.zip
+    mkdir /PAHT_TO_APPLICATION/app/Resources/java
+    cp /tmp/yuicompressor-2.4.7/build/yuicompressor-2.4.7.jar /PAHT_TO_APPLICATION/app/Resources/java/
+    rm -rf yuicompressor-2.4.7.zip yuicompressor-2.4.7
+
+Configure Assetic in app/config/config.yml
+
+    assetic:
+        debug:          %kernel.debug%
+        use_controller: false
+        bundles:
+        - RgouBootstrapBundle
+        #java: /usr/bin/java
+        filters:
+            cssrewrite: ~
+            yui_css:
+                jar: %kernel.root_dir%/Resources/java/yuicompressor-2.4.7.jar
+            yui_js:
+                jar: %kernel.root_dir%/Resources/java/yuicompressor-2.4.7.jar
+
+### Compile assets with assetic 
+
+    app/console assetic:dump
 
 ## Usage
 
-#### CRUD generation
+   See [Doc Index](Resources/doc/index.md) for full usage documentation
 
-The CRUD-generator in [RgouBootstrapBundle](https://github.com/rafaelgou/RgouBootstrapBundle) is based on [SensioGeneratorBundle](https://github.com/sensio/SensioGeneratorBundle).
-
-For Doctrine generator (MySQL, PostgreSQL, etc) use:
-- `php ./app/console rgou:generate:bootstrap-crud`
-   with the same options and arguments.
-
-For Doctrine MongoDB ODM generator (MongoDB !!) use:
-- `php ./app/console rgou:generate:bootstrap-crud-odm`
-   with the same options and arguments - of course for *Documents" instead of "Entities".
-
-
-#### Template overriding
-
-Default CRUD-templates reside in [Resources/skeleton/crud]() that can be overridden in `/app/Resources/RgouBootstrapBundle/skeleton/crud` or .  
-The base-templates of [SensioGeneratorBundle](https://github.com/sensio/SensioGeneratorBundle) can be overridden in the same way.
-
-###### Example #1:
-All generated views extend from `ToaTwitterBootstrapBundle::layout.html.twig` that can be overridden in `/app/Resources/RgouBootstrapBundle/skeleton/crud/views/others/extends.twig.twig`.
-
-###### Example #2:
-All generated views use the `content` block that can be overridden in `/app/Resources/RgouBootstrapBundle/skeleton/crud/views/others/block.twig.twig`.

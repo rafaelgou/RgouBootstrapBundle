@@ -1,69 +1,173 @@
+{# Container class definition
+   --------------------------
+   Twitter Bootstrap container class can be 'container' or 'container-fluid'
+   You can overwride in your layouts
+   use 
+
+    <div class="{{ container_class }}">
+
+   whatever you need to be consistent with the main container
+   (such as navbars and footer)  
+    
+#}
+{% set container_class = 'container-fluid' %}
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8" />
 
-    {% block head_stylesheets %}
-    {# Main Stylesheets #}
-    {% endblock head_stylesheets %}
+    {# Main Stylesheets
+       ----------------
+       Use this block in Layouts to set global stylesheets
+       or if you want to overwride
+    #}
+    {% block head_stylesheets %}{% endblock head_stylesheets %}
     
-    {% block stylesheets %}
-    {# Additional Stylesheets #}
-    {% endblock stylesheets %}
+    
+    {# Additional Stylesheets
+       ----------------------
+       Use this block anywhere in templates to add additional stylesheets
+       without overwriding  global stylesheets
+    #}
+    {% block stylesheets %}{% endblock stylesheets %}
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    {% block head_javascripts %}
-    {# Additional Javascripts on head #}
-    {% endblock head_javascripts %}
+    {# Additional Javascripts on head 
+       ------------------------------
+       Use this block to put some javascritps on the HEAD
+       But preferably use "footer_javascripts" and "javascritps" blocks below
+       for better loading performance
+    #}
+    {% block head_javascripts %}{% endblock head_javascripts %}
     
+    {# Title
+       -----
+       Use this block to set the page title
+    #}
     <title>{% block title %}Rgou Bootstrap Bundle{% endblock title %}</title>
+    
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
     
-    {% block head_extra %}
-    {% endblock head_extra %}
+    {# Extra Head
+       ----------
+       Use this block to set anything more in the HEAD
+    #}
+    {% block head_extra %}{% endblock head_extra %}
     
 </head>
+
+{# Body
+   ----
+   Body block. Use with careful, overwrides A LOT of blocks!
+#}
 {% block body %}
+
+
+{# Body Attributes
+   ---------------
+   Useful for javascripts or class overwrides, but preferably use
+   jQuery.ready for body onload stuffs
+#}
 <body {% block body_attributes %}{% endblock body_attributes %}>
-    {# Top Navigation Bar #}
-    {% block navbar_top %}    
-    {% endblock navbar_top %}
-    {# Bottom Navigation Bar #}
-    {% block navbar_bottom %}
-    {% endblock navbar_bottom %}
+    
+    {# Top Navigation Bar
+       ------------------
+       Use a "navbar navbar-fixed-top" to be fix on top
+       <div class="navbar navbar-fixed-top">
+           <div class="{{ container_class }}">
+           (...)
+           </div>
+       </div>
+    #}
+    {% block navbar_top %}{% endblock navbar_top %}
+    
+    {# Bottom Navigation Bar
+       ---------------------
+       Use a "navbar navbar-fixed-bottom" to be fix on bottom
+       <div class="navbar navbar-fixed-bottom">
+           <div class="{{ container_class }}">
+           (...)
+           </div>
+       </div>
+    #}
+    {% block navbar_bottom %}{% endblock navbar_bottom %}
+    
+    {# Main Container 
+       --------------
+       Use this block to overwride all containers but navbars
+    #}
     {% block container %}
         
-    <div class="{% block container_class %}container-fluid{% endblock container_class %}">
+    <div class="{{ container_class }}">
 
         <div class="content">
+
+            {# Page Header
+               -----------
+               Page header block, you'll overwride in every page
+               use <div class="page-header"> for consistency, but feel free
+               to do whatever you want
+            #}
             {% block page_header %}
             <div class="page-header">
-                  <h1>{% block headline %}Mopa Bootstrap Bundle{% endblock headline %}</h1>
+                  {# Headline
+                     -----------
+                     If you want to save some lines using the default "page-header" class
+                     just use this block in your templates
+                  #}
+                  <h1>{% block headline %}Rgou Bootstrap Bundle{% endblock headline %}</h1>
             </div>
             {% endblock page_header %}            
             
-            {% block content %}
-            {% endblock content %}
+            {# Content
+               -------
+               THE content of the page that want to show
+            #}
+            {% block content %}{% endblock content %}
                 
         </div>
         
     </div>
         
-    <footer class="footer">
-        {% block footer %}
-            <div class="container-fluid">
-                <p><a href="http://github.com/rafaelgou/RgouBootstrapBundle" target="_blank">Rgou Bootstrap Bundle</a> &copy; <a href="http://tech.rgou.net" target="_blank">Rafael Goulart</a> 2013</p>
-            </div>                
-        {% endblock footer %}
-    </footer>
     {% endblock container %}
-    {% block footer_javascripts %}
-    {# Main Javascripts on footer #}
-    {% endblock footer_javascripts %}     
-    {% block javascripts %}
-    {# Additional Javascripts on footer #}
-    {% endblock javascripts %}
+    
+    {# Footer
+       ------
+        Full footer for overwride
+    #}
+    {% block footer %}
+    <footer class="footer">
+        <div class="{{ container_class }}">
+        {# Footer Content
+           --------------
+            Only the footer content to be over overwride
+        #}
+        {% block footer_content %}
+                <p><a href="http://github.com/rafaelgou/RgouBootstrapBundle" target="_blank">Rgou Bootstrap Bundle</a> &copy; <a href="http://tech.rgou.net" target="_blank">Rafael Goulart</a> 2013</p>
+        {% endblock footer_content %}
+        </div>                
+    </footer>
+    {% endblock footer %}
+        
+    
+    {# Main Javascripts on footer
+       --------------------------
+       Here you put the MAIN javascripts for better loading performance
+       You'd better use this block in global layouts an don't overwride
+       e.g. jQuery, jQuery plugins and Bootstrap (CDN also!) and
+       your local global javascript
+
+    #}
+    {% block footer_javascripts %}{% endblock footer_javascripts %}     
+
+    {# Additional Javascripts on footer 
+       --------------------------------
+       Use this block in templates for inline or include javascripts
+       needed only on that context
+    #}
+    {% block javascripts %}{% endblock javascripts %}
+    
 </body>
 {% endblock body %}
 </html>

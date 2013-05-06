@@ -1,5 +1,4 @@
 {% extends 'RgouBootstrapBundle::base.html.twig' %}
-{% set container_class = 'container-fluid' %}
 
 {% block head_stylesheets %}
         <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.no-icons.min.css" type="text/css" rel="stylesheet" media="screen" />
@@ -38,34 +37,6 @@
     </div>
 </div> 
 {% endblock navbar_top %}
-
-{# Bottom Navigation Bar #}
-{% block navbar_bottom %}
-{#
-<div class="navbar navbar-fixed-bottom">
-    <div class="navbar-inner">
-        <div class="{{ container_class }}">
-            
-            <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
-            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </a>            
-            
-            <a class="brand" href="#">Rgou</a>
-            
-            <!-- Everything you want hidden at 940px or less, place within here -->
-            <div class="nav-collapse collapse">
-                {{ knp_menu_render('main', {'currentClass': 'active', 'template': 'RgouBootstrapBundle:Menu:knp_menu.html.twig'}) }}
-                {{ knp_menu_render('RgouBootstrapBundle:Builder:userMenu', {'currentClass': 'active', 'template': 'RgouBootstrapBundle:Menu:knp_menu.html.twig'}) }}
-            </div>            
-            
-        </div>
-    </div>
-</div>
-#}  
-{% endblock navbar_bottom %}
 
 {% block footer_javascripts %}
         <script type="text/javascript" src="//code.jquery.com/jquery-1.9.1.min.js"></script>

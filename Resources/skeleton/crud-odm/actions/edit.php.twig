@@ -11,24 +11,24 @@
     {
         $dm = $this->get('doctrine.odm.mongodb.document_manager');
 
-        $document = $dm->getRepository('{{ bundle }}:{{ entity }}')->find($id);
+        $record = $dm->getRepository('{{ bundle }}:{{ entity }}')->find($id);
 
-        if (!$document) {
+        if (!$record) {
             throw $this->createNotFoundException('Unable to find {{ entity }} document.');
         }
 
-        $editForm = $this->createForm(new {{ entity_class }}Type(), $document);
+        $editForm = $this->createForm(new {{ entity_class }}Type(), $record);
         $deleteForm = $this->createDeleteForm($id);
 
 {% if 'annotation' == format %}
         return array(
-            'document'    => $document,
+            'record'    => $record,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         );
 {% else %}
         return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:edit.html.twig', array(
-            'document'    => $document,
+            'record'    => $record,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         ));

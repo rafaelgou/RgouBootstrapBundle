@@ -12,13 +12,13 @@
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('{{ bundle }}:{{ entity }}')->find($id);
+        $record = $em->getRepository('{{ bundle }}:{{ entity }}')->find($id);
 
-        if (!$entity) {
+        if (!$record) {
             throw $this->createNotFoundException('Unable to find {{ entity }} entity.');
         }
 
-        $editForm   = $this->createForm(new {{ entity_class }}Type(), $entity);
+        $editForm   = $this->createForm(new {{ entity_class }}Type(), $record);
         $deleteForm = $this->createDeleteForm($id);
 
         $request = $this->getRequest();
@@ -26,21 +26,36 @@
         $editForm->bindRequest($request);
 
         if ($editForm->isValid()) {
-            $em->persist($entity);
+            $em->persist($record);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('{{ route_name_prefix }}_edit', array('id' => $id)));
+            $this->get('session')->getFlashBag()->add(
+                'success',
+                'The record was successfully updated.'
+            );
+
+            {% if 'show' in actions -%}
+                return $this->redirect($this->generateUrl('{{ route_name_prefix }}_show', array('id' => $record->getId())));
+            {%- else -%}
+                return $this->redirect($this->generateUrl('{{ route_name_prefix }}'));
+            {%- endif %}
+
         }
+
+        $this->get('session')->getFlashBag()->add(
+            'error',
+            'There is a error in the form. Check below.'
+        );
 
 {% if 'annotation' == format %}
         return array(
-            'entity'      => $entity,
+            'record'      => $record,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         );
 {% else %}
         return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:edit.html.twig', array(
-            'entity'      => $entity,
+            'record'      => $record,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         ));

@@ -24,7 +24,6 @@ class Configuration implements ConfigurationInterface
             ->addDefaultsIfNotSet()
             ->children()
                 ->scalarNode('template')->defaultValue('RgouBootstrapBundle::layout_local.html.twig')->end()
-                ->scalarNode('block')->defaultValue('content')->end()
             ->end();
 
         return $treeBuilder;

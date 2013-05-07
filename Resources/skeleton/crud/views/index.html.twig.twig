@@ -1,8 +1,17 @@
 {{ "{% extends '" ~ rgou_bootstrap.template ~ "' %}" }}
 
-{{ '{% block headline %}' }}{{ "{{ '" ~ entity ~ "'|trans }}" }} {{ "{{ 'list'|trans }}" }}{{ '{% endblock headline %}' }}
+{{ "{% block headline %}" }}
+{{ "{{ '%entity% list'|trans({'%entity%': '" ~ entity ~ "'},'rgoubootstrap') }}" }}
+    {% if 'new' in actions %}
+    <small> {{ "{{ 'or'|trans({},'rgoubootstrap') }}" }}
+        <a title="{{ "{{ 'New'|trans({},'rgoubootstrap') }}" }}" class="btn btn-small" href="{{ "{{ path('"~ route_name_prefix ~"_new') }}" }}">
+        <i class="icon-plus icon-white"></i> {{ "{{ 'New'|trans({},'rgoubootstrap') }}" }}
+        </a>
+    </small>
+    {% endif %}
+{{ '{% endblock headline %}' }}
 
-{{ "{% block " ~ rgou_bootstrap.block ~ " %}" }}
+{{ "{% block content %}" }}
 
 <table class="records_list table table-bordered table-condensed table-striped">
     <thead>
@@ -13,37 +22,37 @@
 
         {%- endfor %}
 
-            <th>Actions</th>
+            <th>{{ "{{ 'Actions'|trans({},'rgoubootstrap') }}" }}</th>
         </tr>
     </thead>
     <tbody>
-    {{ '{% for entity in entities %}' }}
+    {{ '{% for record in records %}' }}
         <tr>
 
     {%- for field, metadata in fields %}
         {%- if loop.first and ('show' in actions) %}
 
-            <td><a href="{{ "{{ path('"~ route_name_prefix ~"_show', { 'id': entity.id }) }}" }}">{{ '{{ entity.'~ field|replace({'_': ''}) ~' }}' }}</a></td>
+            <td><a href="{{ "{{ path('"~ route_name_prefix ~"_show', { 'id': record.id }) }}" }}">{{ '{{ record.'~ field|replace({'_': ''}) ~' }}' }}</a></td>
 
         {%- elseif metadata.type in ['datetimetz', 'datetime'] %}
 
-            <td>{{ '{% if entity.'~ field|replace({'_': ''}) ~' %}{{ entity.'~ field|replace({'_': ''}) ~'|date(\'Y-m-d H:i:s\') }}{% endif %}' }}</td>
+            <td>{{ '{% if record.'~ field|replace({'_': ''}) ~' %}{{ record.'~ field|replace({'_': ''}) ~'|date(\'Y-m-d H:i:s\') }}{% endif %}' }}</td>
 
         {%- elseif metadata.type == 'date' %}
 
-            <td>{{ '{% if entity.'~ field|replace({'_': ''}) ~' %}{{ entity.'~ field|replace({'_': ''}) ~'|date(\'Y-m-d\') }}{% endif %}' }}</td>
+            <td>{{ '{% if record.'~ field|replace({'_': ''}) ~' %}{{ record.'~ field|replace({'_': ''}) ~'|date(\'Y-m-d\') }}{% endif %}' }}</td>
 
         {%- elseif metadata.type == 'time' %}
 
-            <td>{{ '{% if entity.'~ field|replace({'_': ''}) ~' %}{{ entity.'~ field|replace({'_': ''}) ~'|date(\'H:i:s\') }}{% endif %}' }}</td>
+            <td>{{ '{% if record.'~ field|replace({'_': ''}) ~' %}{{ record.'~ field|replace({'_': ''}) ~'|date(\'H:i:s\') }}{% endif %}' }}</td>
 
         {%- elseif metadata.type == 'boolean' %}
 
-            <td><i class="{{ '{{ entity.'~ field|replace({'_': ''}) ~' ? \'icon-check\' : \'\' }}' }}"></i></td>
+            <td><i class="{{ '{{ record.'~ field|replace({'_': ''}) ~' ? \'icon-check\' : \'\' }}' }}"></i></td>
 
         {%- else %}
 
-            <td>{{ '{{ entity.'~ field|replace({'_': ''}) ~' }}' }}</td>
+            <td>{{ '{{ record.'~ field|replace({'_': ''}) ~' }}' }}</td>
 
         {%- endif %}
 
@@ -60,12 +69,5 @@
     {{ '{% endfor %}' }}
     </tbody>
 </table>
-
-{% if 'new' in actions %}
-<a class="btn" href="{{ "{{ path('"~ route_name_prefix ~"_new') }}" }}">
-    <i class="icon-plus"></i>
-    {{ "{{ 'create a new entry'|trans }}" }}
-</a>
-{% endif %}
 
 {{ "{% endblock %}" }}

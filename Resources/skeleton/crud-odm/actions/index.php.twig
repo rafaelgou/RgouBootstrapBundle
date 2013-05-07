@@ -11,15 +11,15 @@
     {
         $dm = $this->get('doctrine.odm.mongodb.document_manager');
 
-        $documents = $dm->getRepository('{{ bundle }}:{{ entity }}')->findAll();
+        $records = $dm->getRepository('{{ bundle }}:{{ entity }}')->findAll();
 
 {% if 'annotation' == format %}
         return array(
-            'documents' => $documents,
+            'records' => $records,
         );
 {% else %}
         return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:index.html.twig', array(
-            'documents' => $documents,
+            'records' => $records,
         ));
 {% endif %}
     }

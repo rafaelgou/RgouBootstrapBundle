@@ -10,32 +10,42 @@
      */
     public function createAction()
     {
-        $entity  = new {{ entity_class }}();
+        $record  = new {{ entity_class }}();
         $request = $this->getRequest();
-        $form    = $this->createForm(new {{ entity_class }}Type(), $entity);
+        $form    = $this->createForm(new {{ entity_class }}Type(), $record);
         $form->bindRequest($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
+            $em->persist($record);
             $em->flush();
 
+            $this->get('session')->getFlashBag()->add(
+                'success',
+                'The record was successfully created.'
+            );
+            
             {% if 'show' in actions -%}
-                return $this->redirect($this->generateUrl('{{ route_name_prefix }}_show', array('id' => $entity->getId())));
+                return $this->redirect($this->generateUrl('{{ route_name_prefix }}_show', array('id' => $record->getId())));
             {%- else -%}
                 return $this->redirect($this->generateUrl('{{ route_name_prefix }}'));
             {%- endif %}
 
         }
 
+        $this->get('session')->getFlashBag()->add(
+            'error',
+            'There is a error in the form. Check below.'
+        );
+        
 {% if 'annotation' == format %}
         return array(
-            'entity' => $entity,
+            'entity' => $record,
             'form'   => $form->createView(),
         );
 {% else %}
         return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:new.html.twig', array(
-            'entity' => $entity,
+            'entity' => $record,
             'form'   => $form->createView(),
         ));
 {% endif %}

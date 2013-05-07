@@ -119,6 +119,22 @@
                   <h1>{% block headline %}Rgou Bootstrap Bundle{% endblock headline %}</h1>
             </div>
             {% endblock page_header %}            
+
+            {# Alerts
+               ------
+               Flash messages template
+            #}
+            {% block alerts %}
+            {% set types = ['notice','error','success','info'] %}
+            {% for type in types %}
+                {% for flashMessage in app.session.flashbag.get(type) %}
+                <div class="alert alert-{{ type }}">
+                    <p>{{ flashMessage | trans({}, 'rgou_bootstrap') }}</p>
+                </div>
+                {% endfor %}
+            {% endfor %}            
+            {% endblock alerts %}
+            
             
             {# Content
                -------

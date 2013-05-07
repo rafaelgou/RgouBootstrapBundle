@@ -137,6 +137,7 @@ The base layout has some default blocks and one variable described bellow:
 - `container`: Main Container (all body without navbars, footer and javascripts)
 - `page_header`: Page Header
 - `headline`: Page Headline
+- `alerts`: Alerts (flash messages)
 - `content`: The main content
 - `footer`: The Full Footer
 - `footer_content`: Only the footer content with div formating

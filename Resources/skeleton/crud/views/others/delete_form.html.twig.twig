@@ -1,0 +1,27 @@
+<form action="{{ "{{ path('"~ route_name_prefix ~"_delete', { 'id': record.id }) }}" }}" method="post">
+{{ '{{ form_widget(delete_form) }}' }}
+<div id="delete_modal" class="modal hide fade">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>{{ "{{ '%entity% delete'|trans({'%entity%': '" ~ entity ~ "'},'rgoubootstrap') }}" }}</h3>
+    </div>
+    <div class="modal-body">
+        <p>{{ "{{ 'Are you sure you want delete this record?'|trans({},'rgoubootstrap') }}" }}</p>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn" type="button" data-dismiss="modal">{{ "{{ 'Cancel'|trans({},'rgoubootstrap') }}" }}</a>
+        <a href="#" class="btn btn-primary" type="submit">{{ "{{ 'Delete'|trans({},'rgoubootstrap') }}" }}</a>
+    </div>
+</div>
+</form>
+{% block javascripts %}
+<script type="text/javascript">
+/*<![CDATA[*/
+$(function() {
+    $('#delete_record').on('click',function(){
+        $('#delete_modal').modal('show');
+    });
+ });
+/*]]>*/
+</script>
+{% endblock javascripts %}

@@ -11,24 +11,24 @@
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('{{ bundle }}:{{ entity }}')->find($id);
+        $record = $em->getRepository('{{ bundle }}:{{ entity }}')->find($id);
 
-        if (!$entity) {
+        if (!$record) {
             throw $this->createNotFoundException('Unable to find {{ entity }} entity.');
         }
 
-        $editForm = $this->createForm(new {{ entity_class }}Type(), $entity);
+        $editForm = $this->createForm(new {{ entity_class }}Type(), $record);
         $deleteForm = $this->createDeleteForm($id);
 
 {% if 'annotation' == format %}
         return array(
-            'entity'      => $entity,
+            'record'      => $record,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         );
 {% else %}
         return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:edit.html.twig', array(
-            'entity'      => $entity,
+            'record'      => $record,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         ));

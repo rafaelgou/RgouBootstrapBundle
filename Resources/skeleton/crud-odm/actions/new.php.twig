@@ -9,17 +9,17 @@
      */
     public function newAction()
     {
-        $document = new {{ entity_class }}();
-        $form   = $this->createForm(new {{ entity_class }}Type(), $document);
+        $record = new {{ entity_class }}();
+        $form   = $this->createForm(new {{ entity_class }}Type(), $record);
 
 {% if 'annotation' == format %}
         return array(
-            'document' => $document,
+            'record' => $record,
             'form'     => $form->createView(),
         );
 {% else %}
         return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:new.html.twig', array(
-            'document' => $document,
+            'record' => $record,
             'form'     => $form->createView(),
         ));
 {% endif %}

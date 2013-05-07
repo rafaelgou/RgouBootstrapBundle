@@ -17,7 +17,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\Output;
 use Sensio\Bundle\GeneratorBundle\Command\Validators;
 
-use Rgou\BootstrapBundle\Generator\DoctrineCrudGenerator;
+use Rgou\BootstrapBundle\Generator\DoctrineCrudODMGenerator;
 use Rgou\BootstrapBundle\Generator\DoctrineFormGenerator;
 use Sensio\Bundle\GeneratorBundle\Command\GenerateDoctrineCrudCommand as BaseGenerateDoctrineCrudCommand;
 use Doctrine\ODM\MongoDB\Mapping\ClassMetadataFactory;
@@ -77,7 +77,7 @@ EOT
     protected function getGenerator()
     {
         if (null === $this->generator) {
-            $this->generator = new DoctrineCrudGenerator(
+            $this->generator = new DoctrineCrudODMGenerator(
                 $this->getContainer()->get('filesystem'),
                 __DIR__.'/../Resources/skeleton/crud-odm',
                 $this->getContainer()

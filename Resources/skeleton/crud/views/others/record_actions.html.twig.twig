@@ -1,23 +1,34 @@
-{% if ('edit' in actions) and (not hide_edit) %}
-    <p>
-        <a class="btn" href="{{ "{{ path('"~ route_name_prefix ~"_edit', { 'id': entity.id }) }}" }}">
-            <i class="icon-pencil"></i>
-            {{ "{{ 'edit'|trans }}" }}
-        </a>
-    </p>
-{% endif %}
-
-{% if ('delete' in actions) and (not hide_delete) %}
-    <form action="{{ "{{ path('"~ route_name_prefix ~"_delete', { 'id': entity.id }) }}" }}" method="post">
-        {{ '{{ form_widget(delete_form) }}' }}
-        <button class="btn btn-danger" type="submit">
-            <i class="icon-trash"></i>
-            {{ "{{ 'delete'|trans }}" }}
-        </button>
-    </form>
-{% endif %}
-
-    <a class="btn" href="{{ "{{ path('"~ route_name_prefix ~"') }}" }}">
-        <i class="icon-th-list"></i>
-        {{ "{{ 'back to the list'|trans }}" }}
+<div class="form-actions">
+    <a title="{{ "{{ 'Back to the list'|trans({},'rgoubootstrap') }}" }}" class="btn" href="{{ "{{ path('"~ route_name_prefix ~"') }}" }}">
+       <i class="icon-th-list icon-white"></i> {{ "{{ 'Back to the list'|trans({},'rgoubootstrap') }}" }}
     </a>
+
+{% if ('edit' in actions) and (not hide_save) %}
+    <button class="btn btn-primary" type="submit" name="_save">
+        <i class="icon-save"></i>
+        {{ "{{ 'Save'|trans({},'rgoubootstrap') }}" }}
+    </button>
+{% endif %}
+
+{% if ('edit' in actions) and (not hide_save_add) %}
+    <button class="btn" type="submit" name="_save_and_add">
+        <i class="icon-save"></i> <i class="icon-plus"></i> 
+        {{ "{{ 'Save and Add'|trans({},'rgoubootstrap') }}" }}
+    </button>
+{% endif %}
+
+{% if ('edit' in actions) and (not hide_edit) %}
+    <a class="btn" href="{{ "{{ path('"~ route_name_prefix ~"_edit', { 'id': record.id }) }}" }}">
+        <i class="icon-pencil"></i>
+        {{ "{{ 'Edit'|trans({},'rgoubootstrap') }}" }}
+    </a>
+{% endif %}
+        
+{% if ('delete' in actions) and (not hide_delete) %}
+    <button id="delete_record" class="btn btn-danger" type="button">
+        <i class="icon-trash"></i>
+        {{ "{{ 'Delete'|trans({},'rgoubootstrap') }}" }}
+    </button>
+{% endif %}
+        
+</div>    

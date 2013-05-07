@@ -4,19 +4,14 @@
 
 {{ '{% block headline %}' }}{{ "{{ '" ~ entity ~ "'|trans }} {{ 'creation'|trans }}" }}{{ '{% endblock headline %}' }}
 
-{{ "{% block " ~ rgou_bootstrap.block ~ " %}" }}
+{{ "{% block content %}" }}
 
 <form class="form-horizontal" action="{{ "{{ path('"~ route_name_prefix ~"_create') }}" }}" method="post" {{ "{{ form_enctype(form) }}" }}>
     {{ "{{ form_widget(form) }}" }}
-    <p>
-        <button class="btn" type="submit">
-            <i class="icon-plus"></i>
-            {{ "{{ 'create'|trans }}" }}
-        </button>
-    </p>
-</form>
 
-{% set hide_edit, hide_delete = true, true %}
+{% set hide_edit, hide_save, hide_save_add, hide_delete = true, false, false, true %}
 {% include 'views/others/record_actions.html.twig.twig' %}
+
+</form>
 
 {{ "{% endblock %}" }}

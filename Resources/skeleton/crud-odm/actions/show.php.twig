@@ -11,9 +11,9 @@
     {
         $dm = $this->get('doctrine.odm.mongodb.document_manager');
 
-        $document = $dm->getRepository('{{ bundle }}:{{ entity }}')->find($id);
+        $record = $dm->getRepository('{{ bundle }}:{{ entity }}')->find($id);
 
-        if (!$document) {
+        if (!$record) {
             throw $this->createNotFoundException('Unable to find {{ entity }} document.');
         }
 {% if 'delete' in actions %}
@@ -23,14 +23,14 @@
 
 {% if 'annotation' == format %}
         return array(
-            'document'    => $document,
+            'record'    => $record,
 {% if 'delete' in actions %}
             'delete_form' => $deleteForm->createView(),
 {% endif %}
         );
 {% else %}
         return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:show.html.twig', array(
-            'document'    => $document,
+            'record'    => $record,
 {% if 'delete' in actions %}
             'delete_form' => $deleteForm->createView(),
 {%- endif %}

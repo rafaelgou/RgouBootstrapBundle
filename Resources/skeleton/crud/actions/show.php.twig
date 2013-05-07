@@ -11,9 +11,9 @@
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('{{ bundle }}:{{ entity }}')->find($id);
+        $record = $em->getRepository('{{ bundle }}:{{ entity }}')->find($id);
 
-        if (!$entity) {
+        if (!$record) {
             throw $this->createNotFoundException('Unable to find {{ entity }} entity.');
         }
 {% if 'delete' in actions %}
@@ -23,14 +23,14 @@
 
 {% if 'annotation' == format %}
         return array(
-            'entity'      => $entity,
+            'record'      => $record,
 {% if 'delete' in actions %}
             'delete_form' => $deleteForm->createView(),
 {% endif %}
         );
 {% else %}
         return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:show.html.twig', array(
-            'entity'      => $entity,
+            'record'      => $record,
 {% if 'delete' in actions %}
             'delete_form' => $deleteForm->createView(),
 {%- endif %}

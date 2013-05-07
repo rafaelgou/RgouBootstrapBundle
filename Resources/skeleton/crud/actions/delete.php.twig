@@ -16,15 +16,26 @@
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('{{ bundle }}:{{ entity }}')->find($id);
+            $record = $em->getRepository('{{ bundle }}:{{ entity }}')->find($id);
 
-            if (!$entity) {
+            if (!$record) {
                 throw $this->createNotFoundException('Unable to find {{ entity }} entity.');
             }
 
-            $em->remove($entity);
+            $em->remove($record);
             $em->flush();
+            $this->get('session')->getFlashBag()->add(
+                'success',
+                'The record was successfully deleted.'
+            );
+
         }
+
+        $this->get('session')->getFlashBag()->add(
+            'error',
+            'There is a error deleting the record.'
+        );
+        
 
         return $this->redirect($this->generateUrl('{{ route_name_prefix }}'));
     }

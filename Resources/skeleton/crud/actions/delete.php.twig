@@ -29,14 +29,14 @@
                 'The record was successfully deleted.'
             );
 
+        } else {
+
+            $this->get('session')->getFlashBag()->add(
+                'error',
+                'There is a error deleting the record.'
+            );
         }
-
-        $this->get('session')->getFlashBag()->add(
-            'error',
-            'There is a error deleting the record.'
-        );
         
-
         return $this->redirect($this->generateUrl('{{ route_name_prefix }}'));
     }
 

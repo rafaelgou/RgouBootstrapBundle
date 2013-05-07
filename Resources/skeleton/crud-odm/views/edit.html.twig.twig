@@ -27,3 +27,7 @@
 </form>
 
 {{ "{% endblock %}" }}
+
+{% if ('delete' in actions) and (not hide_delete) %}
+{% include 'views/others/delete_javascript.html.twig.twig' %}
+{% endif %}

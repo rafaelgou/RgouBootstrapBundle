@@ -31,12 +31,14 @@
                 return $this->redirect($this->generateUrl('{{ route_name_prefix }}'));
             {%- endif %}
 
-        }
+        } else {
 
-        $this->get('session')->getFlashBag()->add(
-            'error',
-            'There is a error in the form. Check below.'
-        );
+            $this->get('session')->getFlashBag()->add(
+                'error',
+                'There is a error in the form. Check below.'
+            );
+
+        }
         
 {% if 'annotation' == format %}
         return array(

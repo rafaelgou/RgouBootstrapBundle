@@ -15,6 +15,7 @@
     ],
     "require": {
         "php": ">=5.3.2",
+        "knplabs/knp-paginator-bundle": "dev-master",
         "knplabs/knp-menu": "2.0.*@dev",
         "knplabs/knp-menu-bundle": "2.0.*@dev"
     },

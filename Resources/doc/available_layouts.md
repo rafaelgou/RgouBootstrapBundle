@@ -1,8 +1,5 @@
 # Available Layouts
 
-
-
-
 ## Default Layouts
 
 Layouts are extendable Twig templates with a page layout for reusing.

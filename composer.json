@@ -1,8 +1,8 @@
 {
     "name": "rgou/bootstrap-bundle",
     "type": "symfony-bundle",
-    "description": "Twitter Boostrap Bundle for Symfony 2",
-    "keywords": ["symfony", "bundle", "twitter", "boostrap", "theme"],
+    "description": "Twitter Bootstrap Bundle for Symfony 2",
+    "keywords": ["symfony", "bundle", "twitter", "bootstrap", "theme"],
     "homepage": "http://github.com/rafaelgou/RgouBoostrapBundle",
     "license": "MIT",
     "authors": [

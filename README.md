@@ -21,7 +21,7 @@ Both are great jobs! I just want to merge some features in a more personal way.
 * Basic layouts using CDN (from [BootstrapCDN](http://www.bootstrapcdn.com/)) or local assets
 * Local and CDN Bootswatch(http://bootswatch.com/) themes
 * A generic Navbar class to generate your Navbar outside the template
-  * helpers for dropdowns, seperators, etc. (from [MopaBootstrapBundle](https://github.com/phiamo/MopaBootstrapBundle))
+  * helpers for dropdowns, separators, etc. (from [MopaBootstrapBundle](https://github.com/phiamo/MopaBootstrapBundle))
 * twig templates for KnpPaginatorBundle (https://github.com/knplabs/KnpPaginatorBundle)
   (from [MopaBootstrapBundle](https://github.com/phiamo/MopaBootstrapBundle))
 * twig template for KnpMenu (https://github.com/KnpLabs/KnpMenu)
@@ -105,6 +105,17 @@ Add to `app/config/config.yml`:
         template:
             pagination: KnpPaginatorBundle:Pagination:twitter_bootstrap_pagination.html.twig     # sliding pagination controls template
             sortable: KnpPaginatorBundle:Pagination:sortable_link.html.twig # sort link template
+
+
+## Configure KnpMenuBundle
+
+Add to `app/config/config.yml`:
+
+    knp_menu:
+        twig:  
+            template: RgouBootstrapBundle:Menu:knp_menu.html.twig
+        templating: false
+        default_renderer: twig
 
 ## Usage
 

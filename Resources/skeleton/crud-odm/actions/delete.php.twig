@@ -23,7 +23,6 @@
                 throw $this->createNotFoundException('Unable to find {{ entity }} document.');
             }
 
-
             $dm->remove($record);
             $dm->flush();
             
@@ -36,7 +35,7 @@
 
             $this->get('session')->getFlashBag()->add(
                 'error',
-                'There is a error deleting the record.'
+                'There is an error on deleting the record.'
             );
         }
         

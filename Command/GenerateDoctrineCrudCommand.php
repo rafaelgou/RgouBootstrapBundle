@@ -32,7 +32,19 @@ class GenerateDoctrineCrudCommand extends BaseGenerateDoctrineCrudCommand
         $this
             ->setName('rgou:generate:bootstrap-crud')
             ->setDescription('Generates a CRUD based on a Doctrine entity with Twitter Boostrap Theme')
-            ->setAliases(array());
+            ->setAliases(array())
+            ->setHelp(<<<EOT
+The <info>rgou:generate:bootstrap-crud</info> command generates a CRUD based on a Doctrine entity.
+
+The default command only generates the list and show actions.
+
+<info>php app/console rgou:generate:bootstrap-crud --entity=AcmeBlogBundle:Post --route-prefix=post_admin</info>
+
+Using the --with-write option allows to generate the new, edit and delete actions.
+
+<info>php app/console doctrine:generate:crud --entity=AcmeBlogBundle:Post --route-prefix=post_admin --with-write</info>
+EOT
+            );
     }
 
     protected function getGenerator()

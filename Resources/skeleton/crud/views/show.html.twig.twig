@@ -1,7 +1,7 @@
 {{ "{% extends '" ~ rgou_bootstrap.template ~ "' %}" }}
 
 {{ "{% block headline %}" }}
-{{ "{{ '%entity% show'|trans({'%entity%': '" ~ entity ~ "'},'rgoubootstrap') }}" }}
+{{ "{{ 'Show'|trans({},'rgoubootstrap') }} {{ '" ~ entity ~ "' }}" }}
 <small> {{ "{{ 'or'|trans({},'rgoubootstrap') }}" }}
     <a title="{{ "{{ 'Back to the list'|trans({},'rgoubootstrap') }}" }}" class="btn btn-small" href="{{ "{{ path('"~ route_name_prefix ~"') }}" }}">
        <i class="icon-th-list icon-white"></i> {{ "{{ 'Back to the list'|trans({},'rgoubootstrap') }}" }}

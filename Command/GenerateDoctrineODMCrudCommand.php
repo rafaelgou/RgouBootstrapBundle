@@ -42,7 +42,19 @@ class GenerateDoctrineODMCrudCommand extends BaseGenerateDoctrineCrudCommand
         $this
             ->setName('rgou:generate:bootstrap-crud-odm')
             ->setDescription('Generates a CRUD based on a Doctrine ODM document with Twitter Boostrap Theme')
-            ->setAliases(array());
+            ->setAliases(array())
+            ->setHelp(<<<EOT
+The <info>rgou:generate:bootstrap-crud-odm</info> command generates a CRUD based on a Doctrine ODM document.
+
+The default command only generates the list and show actions.
+
+<info>php app/console rgou:generate:bootstrap-crud-odm --entity=AcmeBlogBundle:Post --route-prefix=post_admin</info>
+
+Using the --with-write option allows to generate the new, edit and delete actions.
+
+<info>php app/console doctrine:generate:crud --entity=AcmeBlogBundle:Post --route-prefix=post_admin --with-write</info>
+EOT
+            );
         
 /*
         $this
@@ -53,22 +65,6 @@ class GenerateDoctrineODMCrudCommand extends BaseGenerateDoctrineCrudCommand
                 new InputOption('format', '', InputOption::VALUE_REQUIRED, 'Use the format for configuration files (php, xml, yml, or annotation)', 'annotation'),
                 new InputOption('overwrite', '', InputOption::VALUE_NONE, 'Do not stop the generation if crud controller already exist, thus overwriting all generated files'),
             ))
-            ->setDescription('Generates a CRUD based on a Doctrine ODM document with Twitter Boostrap Theme')
-            ->setHelp(<<<EOT
-The <info>doctrine:generate:crud</info> command generates a CRUD based on a Doctrine entity.
-
-The default command only generates the list and show actions.
-
-<info>php app/console doctrine:generate:crud --entity=AcmeBlogBundle:Post --route-prefix=post_admin</info>
-
-Using the --with-write option allows to generate the new, edit and delete actions.
-
-<info>php app/console doctrine:generate:crud --entity=AcmeBlogBundle:Post --route-prefix=post_admin --with-write</info>
-EOT
-            )
-            ->setName('doctrine:generate:crud')
-            ->setAliases(array('generate:doctrine:crud'))
-        ;
  */       
         
         

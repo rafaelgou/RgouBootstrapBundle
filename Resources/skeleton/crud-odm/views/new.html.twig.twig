@@ -2,7 +2,7 @@
 
 {{ "{% extends '" ~ rgou_bootstrap.template ~ "' %}" }}
 
-{{ '{% block headline %}' }}{{ "{{ '" ~ entity ~ "'|trans }} {{ 'creation'|trans }}" }}{{ '{% endblock headline %}' }}
+{{ '{% block headline %}' }}{{ "{{ '" ~ entity ~ "' }} {{ 'new'|trans({},'rgoubootstrap') }}" }}{{ '{% endblock headline %}' }}
 
 {{ "{% block content %}" }}
 

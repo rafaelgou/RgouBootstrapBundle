@@ -1,9 +1,11 @@
 {{ "{% extends '" ~ rgou_bootstrap.template ~ "' %}" }}
 
 {{ "{% block headline %}" }}
-{{ "{{ '%entity% list'|trans({'%entity%': '" ~ entity ~ "'},'rgoubootstrap') }}" }}
+{{ "{{ '" ~ entity ~ "' }} {{ 'list'|trans({},'rgoubootstrap') }}" }}
     {% if 'new' in actions %}
-    <small> {{ "{{ 'or'|trans({},'rgoubootstrap') }}" }}
+    <small> 
+        {{ "({% transchoice pagination.totalItemCount with {'%count%': pagination.totalItemCount} from 'rgoubootstrap' %}{0}no records|{1}record|]1,Inf]%count% records{% endtranschoice %}" }})
+        {{ "{{ 'or'|trans({},'rgoubootstrap') }}" }}
         <a title="{{ "{{ 'New'|trans({},'rgoubootstrap') }}" }}" class="btn btn-small" href="{{ "{{ path('"~ route_name_prefix ~"_new') }}" }}">
         <i class="icon-plus icon-white"></i> {{ "{{ 'New'|trans({},'rgoubootstrap') }}" }}
         </a>
@@ -26,7 +28,7 @@
         </tr>
     </thead>
     <tbody>
-    {{ '{% for record in records %}' }}
+    {{ '{% for record in pagination %}' }}
         <tr>
 
     {%- for field, metadata in fields %}
@@ -69,5 +71,10 @@
     {{ '{% endfor %}' }}
     </tbody>
 </table>
+
+{# display navigation #}
+<div class="navigation">
+    {{ "{{ knp_pagination_render(pagination) }}" }}
+</div>
 
 {{ "{% endblock %}" }}

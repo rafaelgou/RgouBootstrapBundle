@@ -16,8 +16,26 @@ services:
     rgou_bootstrap.menu.main:
         class: Knp\Menu\MenuItem
         factory_service: rgou_bootstrap.menu_builder
-        factory_method: createMainMenu
+        factory_method: mainMenu
         arguments: ["@request"]
         scope: request # needed as we have the request as a dependency here
         tags:
             - { name: knp_menu.menu, alias: main }
+
+    rgou_bootstrap.menu.main:
+        class: Knp\Menu\MenuItem
+        factory_service: rgou_bootstrap.menu_builder
+        factory_method: mainMenu
+        arguments: ["@request"]
+        scope: request # needed as we have the request as a dependency here
+        tags:
+            - { name: knp_menu.menu, alias: samplemain }
+
+    rgou_bootstrap.menu.user:
+        class: Knp\Menu\MenuItem
+        factory_service: rgou_bootstrap.menu_builder
+        factory_method: userMenu
+        arguments: ["@request"]
+        scope: request # needed as we have the request as a dependency here
+        tags:
+            - { name: knp_menu.menu, alias: sampleuser }

@@ -1,4 +1,7 @@
-{# source: http://linkofy.wordpress.com/2012/04/02/using-knpmenubundle-and-twitter-bootstrap/ #}
+{# source: 
+    http://nielsmouthaan.nl/symfony2-knpmenubundle-font-awesome-twitter-bootstrap-integration-navigation-bar-including-icons-and-dropdown-menus/ 
+    https://gist.github.com/nielsmouthaan/3765766
+#}
 {% extends 'knp_menu.html.twig' %}
 
 {% block item %}
@@ -36,11 +39,7 @@
 
 {# adding classes for dropdown #}
     {%- if is_dropdown %}
-        {%- if item.level > 1 %}
-            {%- set classes = classes|merge(['dropdown-submenu']) %}
-        {%- else %}
-            {%- set classes = classes|merge(['dropdown']) %}
-        {%- endif %}
+        {%- set classes = classes|merge(['dropdown']) %}
         {%- set childrenClasses = childrenClasses|merge(['dropdown-menu']) %}
     {%- endif %}
 
@@ -54,7 +53,7 @@
     <li{{ macros.attributes(attributes) }}>
         {%- if is_dropdown %}
             {{ block('dropdownElement') }}
-        {%- elseif item.uri is not empty and (not matcher.isCurrent(item) or options.currentAsLink) %}
+        {%- elseif item.uri is not empty and (not item.current or options.currentAsLink) %}
             {{ block('linkElement') }}
         {%- else %}
             {{ block('spanElement') }}
@@ -77,13 +76,37 @@
 {% endif %}
 {% endblock %}
 
+{% block linkElement %}
+	<a href="{{ item.uri }}"{{ macros.attributes(item.linkAttributes) }}>
+		{% if item.attribute('icon') is not empty  %}
+    		<i class="{{ item.attribute('icon') }}"></i> 
+    	{% endif %}
+		{{ block('label') }}
+	</a>
+{% endblock %}
+
+{% block spanElement %}
+	<span>{{ macros.attributes(item.labelAttributes) }}>
+		{% if item.attribute('icon') is not empty  %}
+    		<i class="{{ item.attribute('icon') }}"></i> 
+    	{% endif %}
+		{{ block('label') }}
+	</span>
+{% endblock %}
+
 {% block dropdownElement %}
     {%- set classes = item.linkAttribute('class') is not empty ? [item.linkAttribute('class')] : [] %}
     {%- set classes = classes|merge(['dropdown-toggle']) %}
     {%- set attributes = item.linkAttributes %}
     {%- set attributes = attributes|merge({'class': classes|join(' ')}) %}
     {%- set attributes = attributes|merge({'data-toggle': 'dropdown'}) %}
-    <a href="#"{{ macros.attributes(attributes) }}>{{ block('label') }}{% if item.level <= 1 %} <b class="caret"></b>{% endif %}</a>
+    <a href="#"{{ macros.attributes(attributes) }}>
+    	{% if item.attribute('icon') is not empty  %}
+    		<i class="{{ item.attribute('icon') }}"></i> 
+    	{% endif %}
+    	{{ block('label') }} 
+    	<b class="caret"></b>
+    </a>
 {% endblock %}
 
 {% block label %}{{ item.label|trans }}{% endblock %}

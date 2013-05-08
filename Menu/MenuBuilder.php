@@ -17,7 +17,7 @@ class MenuBuilder
         $this->factory = $factory;
     }
 
-    public function createMainMenu(Request $request)
+    public function mainMenu(Request $request)
     {
         $menu = $this->factory->createItem('root');
         $menu->setChildrenAttribute('class', 'nav pull-left');
@@ -39,13 +39,15 @@ class MenuBuilder
 
         $menu->addChild('User')
              ->setAttribute('dropdown', true)
-             ->setAttribute('divider_prepend', true);
+             ->setAttribute('divider_prepend', true)
+             ->setAttribute('icon', 'icon-user');
 
-        
-        //$menu['User']->addChild('Profile', array('route' => 'homepage'))
-        $menu['User']->addChild('Profile', array('uri' => '#'))
+        $menu['User']->addChild('Profile', array('route' => 'homepage'))
+                     ->setAttribute('icon', 'icon-user')
                      ->setAttribute('divider_append', true);
-        $menu['User']->addChild('Logout', array('uri' => '#'));
+        
+        $menu['User']->addChild('Logout', array('route' => 'homepage'))
+                     ->setAttribute('icon', 'icon-off');
 
         return $menu;
     }

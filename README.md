@@ -25,10 +25,13 @@ Both are great jobs! I just want to merge some features in a more personal way.
 * twig templates for KnpPaginatorBundle (https://github.com/knplabs/KnpPaginatorBundle)
   (from [MopaBootstrapBundle](https://github.com/phiamo/MopaBootstrapBundle))
 * twig template for KnpMenu (https://github.com/KnpLabs/KnpMenu)
-  * icon support on menu links (from [MopaBootstrapBundle](https://github.com/phiamo/MopaBootstrapBundle))
+  * icon support on menu links (from [MopaBootstrapBundle](https://github.com/phiamo/MopaBootstrapBundle)
+  and [Niels Mouthaan KnpMenu + Twitter Bootstrap GIST](https://gist.github.com/nielsmouthaan/3765766))
 * CRUD Generation based on [SensioGeneratorBundle](https://github.com/sensio/SensioGeneratorBundle)
+  with KnpPaginatorBundle support (just pagination for now, no sort)
   (from ToaTwitterBootstrapBundle](https://github.com/toaotc/ToaTwitterBootstrapBundle))
 * CRUD Generation for Doctrine MongoDB ODM (exclusive feature!)
+  with KnpPaginatorBundle support (just pagination for now, no sort)
 
 
 ## Basic Install
@@ -87,6 +90,21 @@ Configure Assetic in app/config/config.yml
 ### Compile assets with assetic 
 
     app/console assetic:dump
+
+### Configure KnpPaginatorBundle
+
+Add to `app/config/config.yml`:
+
+    knp_paginator:
+        page_range: 5                      # default page range used in pagination control
+        default_options:
+            page_name: page                # page query parameter name
+            sort_field_name: sort          # sort field query parameter name
+            sort_direction_name: direction # sort direction query parameter name
+            distinct: true                 # ensure distinct results, useful when ORM queries are using GROUP BY statements
+        template:
+            pagination: KnpPaginatorBundle:Pagination:twitter_bootstrap_pagination.html.twig     # sliding pagination controls template
+            sortable: KnpPaginatorBundle:Pagination:sortable_link.html.twig # sort link template
 
 ## Usage
 

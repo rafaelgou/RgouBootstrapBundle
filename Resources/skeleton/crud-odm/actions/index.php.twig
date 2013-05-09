@@ -9,6 +9,17 @@
      */
     public function indexAction()
     {
+{% if 'grid' in actions %}
+    {% if 'annotation' == format %}
+        return array(
+            'grid_columns' => $this->getGridColumns()
+        );
+    {% else %}
+        return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:index.html.twig', array(
+            'grid_columns' => $this->getGridColumns()
+        ));
+    {% endif %}
+{% else %}
         $dm = $this->get('doctrine.odm.mongodb.document_manager');
 
         $query = $dm->getRepository('{{ bundle }}:{{ entity }}')
@@ -20,15 +31,16 @@
             $this->get('request')->query->get('page', 1),
             $this->get('request')->query->get('max_per_page', 20)
         );
-        
-
-{% if 'annotation' == format %}
+    {% if 'annotation' == format %}
         return array(
             pagination' => $pagination
         );
-{% else %}
+    {% else %}
         return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:index.html.twig', array(
             'pagination' => $pagination
         ));
+    {% endif %}
+
 {% endif %}
+
     }

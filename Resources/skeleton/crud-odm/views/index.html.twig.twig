@@ -4,7 +4,9 @@
 {{ "{{ '" ~ entity ~ "' }} {{ 'list'|trans({},'rgoubootstrap') }}" }}
     {% if 'new' in actions %}
     <small> 
-        {{ "({% transchoice pagination.totalItemCount with {'%count%': pagination.totalItemCount} from 'rgoubootstrap' %}{0}no records|{1}record|]1,Inf]%count% records{% endtranschoice %}" }})
+        {% if not 'grid' in actions %}
+            {{ "({% transchoice pagination.totalItemCount with {'%count%': pagination.totalItemCount} from 'rgoubootstrap' %}{0}no records|{1}record|]1,Inf]%count% records{% endtranschoice %})" }}
+        {% endif %}
         {{ "{{ 'or'|trans({},'rgoubootstrap') }}" }}
         <a title="{{ "{{ 'New'|trans({},'rgoubootstrap') }}" }}" class="btn btn-small" href="{{ "{{ path('"~ route_name_prefix ~"_new') }}" }}">
         <i class="icon-plus icon-white"></i> {{ "{{ 'New'|trans({},'rgoubootstrap') }}" }}
@@ -15,66 +17,14 @@
 
 {{ "{% block content %}" }}
 
-<table class="records_list table table-bordered table-condensed table-striped">
-    <thead>
-        <tr>
-        {%- for field, metadata in fields %}
-
-            <th>{{ "{{ '" ~ field|capitalize ~ "'|trans }}" }}</th>
-
-        {%- endfor %}
-
-            <th>{{ "{{ 'Actions'|trans({},'rgoubootstrap') }}" }}</th>
-        </tr>
-    </thead>
-    <tbody>
-    {{ '{% for record in pagination %}' }}
-        <tr>
-
-    {%- for field, metadata in fields %}
-        {%- if loop.first and ('show' in actions) %}
-
-            <td><a href="{{ "{{ path('"~ route_name_prefix ~"_show', { 'id': record.id }) }}" }}">{{ '{{ record.'~ field|replace({'_': ''}) ~' }}' }}</a></td>
-
-        {%- elseif metadata.type in ['datetimetz', 'datetime'] %}
-
-            <td>{{ '{% if record.'~ field|replace({'_': ''}) ~' %}{{ record.'~ field|replace({'_': ''}) ~'|date(\'Y-m-d H:i:s\') }}{% endif %}' }}</td>
-
-        {%- elseif metadata.type == 'date' %}
-
-            <td>{{ '{% if record.'~ field|replace({'_': ''}) ~' %}{{ record.'~ field|replace({'_': ''}) ~'|date(\'Y-m-d\') }}{% endif %}' }}</td>
-
-        {%- elseif metadata.type == 'time' %}
-
-            <td>{{ '{% if record.'~ field|replace({'_': ''}) ~' %}{{ record.'~ field|replace({'_': ''}) ~'|date(\'H:i:s\') }}{% endif %}' }}</td>
-
-        {%- elseif metadata.type == 'boolean' %}
-
-            <td><i class="{{ '{{ record.'~ field|replace({'_': ''}) ~' ? \'icon-check\' : \'\' }}' }}"></i></td>
-
-        {%- else %}
-
-            <td>{{ '{{ record.'~ field|replace({'_': ''}) ~' }}' }}</td>
-
-        {%- endif %}
-
-        {%- if loop.last %}
-
-            <td>
-                {%- include "views/others/actions.html.twig.twig" %}
-            </td>
-
-        {%- endif %}
-    {%- endfor %}
-
-        </tr>
-    {{ '{% endfor %}' }}
-    </tbody>
-</table>
-
-{# display navigation #}
-<div class="navigation">
-    {{ "{{ knp_pagination_render(pagination) }}" }}
-</div>
+    {% if 'grid' in actions %}
+        {% include 'views/others/grid.html.twig.twig' %}
+    {% else %}
+        {% include 'views/others/list.html.twig.twig' %}
+    {% endif %}
 
 {{ "{% endblock %}" }}
+
+{% if ('grid' in actions) %}
+{% include 'views/others/grid_javascript.html.twig.twig' %}
+{% endif %}

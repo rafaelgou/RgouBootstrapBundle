@@ -2,6 +2,12 @@ parameters:
 #    rgou_bootstrap.example.class: Rgou\BootstrapBundle\Example
 
 services:
+
+    rgou_bootstrap.util.inflector:
+        class: Rgou\BootstrapBundle\Util\Inflector
+  
+    rgou_bootstrap.util.mongodb:
+        class: Rgou\BootstrapBundle\Util\MongoDB
   
     rgou_bootstrap.twig.globals:
         class: Rgou\BootstrapBundle\Twig\Extension\GlobalsExtension

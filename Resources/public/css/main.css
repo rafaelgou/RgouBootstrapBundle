@@ -48,3 +48,8 @@ margin-top: 2px;
 margin-right: -6px;
 opacity: .25;
 }
+
+/* FuelUX Datatable */
+.sortable {
+    cursor: hand;
+}

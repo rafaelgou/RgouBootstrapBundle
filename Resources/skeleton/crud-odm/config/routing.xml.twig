@@ -8,10 +8,19 @@
         <default key="_controller">{{ bundle }}:{{ entity }}:index</default>
     </route>
 
+{% if 'grid' in actions %}
+    <route id="{{ route_name_prefix }}_ajaxdata" pattern="/ajaxdata">
+        <default key="_controller">{{ bundle }}:{{ entity }}:ajaxdata</default>
+        <default key="_format">json</default>
+    </route>
+{% endif %}
+    
+{% if 'show' in actions %}
     <route id="{{ route_name_prefix }}_show" pattern="/{id}/show">
         <default key="_controller">{{ bundle }}:{{ entity }}:show</default>
     </route>
-
+{% endif %}
+    
 {% if 'new' in actions %}
     <route id="{{ route_name_prefix }}_new" pattern="/new">
         <default key="_controller">{{ bundle }}:{{ entity }}:new</default>

@@ -11,6 +11,13 @@ $collection->add('{{ route_name_prefix }}', new Route('/', array(
 )));
 {% endif %}
 
+{% if 'grid' in actions %}
+$collection->add('{{ route_name_prefix }}_ajaxdata', new Route('/ajaxdata', array(
+    '_controller' => '{{ bundle }}:{{ entity }}:ajaxdata',
+    '_format' => 'json',
+)));
+{% endif %}
+
 {% if 'show' in actions %}
 $collection->add('{{ route_name_prefix }}_show', new Route('/{id}/show', array(
     '_controller' => '{{ bundle }}:{{ entity }}:show',

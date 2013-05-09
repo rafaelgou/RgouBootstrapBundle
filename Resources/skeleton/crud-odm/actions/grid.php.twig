@@ -1,0 +1,126 @@
+
+    /**
+     * Lists all {{ entity }} documents.
+     *
+{% if 'annotation' == format %}
+     * @Route("/", name="{{ route_name_prefix }}_ajaxdata")
+     * @Template()
+{% endif %}
+     */
+    public function ajaxdataAction()
+    {
+
+        $dm = $this->get('doctrine.odm.mongodb.document_manager');
+
+        $mongodbutil = $this->container->get('rgou_bootstrap.util.mongodb');        
+        
+        $query = $dm->getRepository('{{ bundle }}:{{ entity }}')
+                 ->createQueryBuilder()
+                 ->sort(
+                    $this->get('request')->query->get('sortProperty', 'id'), 
+                    $this->get('request')->query->get('sortDirection', 'asc')
+                 );
+
+        if ($this->get('request')->query->get('filter', false)) {
+        
+            $filters    = $this->get('request')->query->get('filter');
+            $fieldTypes = array(
+            {%- for fieldname,field in fields %}
+                
+                '{{ fieldname }}' => '{{ field.type }}',
+
+            {%- endfor %}
+
+            );
+        
+            foreach($this->get('request')->query->get('filter', false) as $field => $value) {
+            
+                $fieldName = str_replace('filter_', '', $field);
+                $value     = $mongodbutil->prepareValueForQuery($fieldTypes[$fieldName], $value);
+                
+                $query->field($fieldName)->equals($value);
+                
+            }
+            
+        }
+                 
+        $paginator  = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $query->getQuery(),
+            $this->get('request')->query->get('page', 1),
+            $this->get('request')->query->get('pageSize', 2)
+        );
+
+        $paginationData = $pagination->getPaginationData();
+        $jsonData = array(
+            'page'    => $paginationData['current'],
+            'pages'   => $paginationData['pageCount'],
+            'perpage' => $paginationData['numItemsPerPage'],
+            'count'   => $paginationData['totalCount'],
+            'data'    => $this->getAjaxData($pagination),
+        );
+        
+        $headers = array(
+            'Content-Type' => 'application/json'
+        );
+
+        return new Response(json_encode($jsonData), 200, $headers);
+
+    }
+    
+    protected function getAjaxData(\Knp\Bundle\PaginatorBundle\Pagination\SlidingPagination $pagination)
+    {
+        $data = array();
+        
+        foreach($pagination as $record)
+        {
+            unset($recordData);
+            $recordData = new \StdClass;
+            
+        {%- for fieldname,field in fields %}
+        
+            $recordData->{{ fieldname }} = $record->get{{ fieldname | camelize }}();
+            
+        {%- endfor %}
+
+            
+            $actionsView = array();
+            
+            {%- for action in record_actions %}
+            
+            // {{ action }}
+            $uri   = $this->get('router')->generate('{{ route_name_prefix ~'_'~ action }}', array('id' => $record->getId()));
+            $label = $this->get('translator')->trans('{{ action }}', array(), 'rgoubootstrap');
+            $actionsView[] = '<a class="btn btn-mini" href="' . $uri . '">'
+                            . '{% if action == 'edit' %}<i class="icon-pencil"></i>{% endif %}{% if action == 'show' %}<i class="icon-eye-open"></i>{% endif %} '
+                            . $label 
+                            . '</a>';
+            {%- endfor %}
+
+
+            $recordData->actions = implode('', $actionsView);
+            
+            $data[] = $recordData;
+            
+        }
+        
+        return $data;
+        
+    }
+
+    protected function getGridColumns()
+    {
+        $columns = array();
+    
+    {%- for fieldname,field in fields %}
+
+        $columns[] = array('property' => '{{ fieldname }}', 'label'    => '{{ fieldname | titleize }}', 'sortable' => true, );
+
+    {%- endfor %}
+
+        // Do not change this unless you want to desactivate all actions
+        $columns[] = array('property' => 'actions', 'label'    => $this->get('translator')->trans('Actions', array(), 'rgoubootstrap'), 'sortable' => false,);
+        
+        return json_encode($columns);
+    }
+

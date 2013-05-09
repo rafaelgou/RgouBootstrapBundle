@@ -11,6 +11,11 @@
     {
         $dm = $this->get('doctrine.odm.mongodb.document_manager');
 
+        // Check for autoincrement Id
+        if ($id == (int) $id) {
+            $id = (int) $id;
+        }
+
         $record = $dm->getRepository('{{ bundle }}:{{ entity }}')->find($id);
 
         if (!$record) {

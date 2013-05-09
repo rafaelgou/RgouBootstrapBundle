@@ -16,10 +16,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\Output;
 use Sensio\Bundle\GeneratorBundle\Command\Validators;
+use Sensio\Bundle\GeneratorBundle\Command\GenerateDoctrineCrudCommand as BaseGenerateDoctrineCrudCommand;
 
 use Rgou\BootstrapBundle\Generator\DoctrineCrudODMGenerator;
 use Rgou\BootstrapBundle\Generator\DoctrineFormGenerator;
-use Sensio\Bundle\GeneratorBundle\Command\GenerateDoctrineCrudCommand as BaseGenerateDoctrineCrudCommand;
 use Doctrine\ODM\MongoDB\Mapping\ClassMetadataFactory;
 use Doctrine\ODM\MongoDB\Mapping\ClassMetadata;
 
@@ -43,6 +43,14 @@ class GenerateDoctrineODMCrudCommand extends BaseGenerateDoctrineCrudCommand
             ->setName('rgou:generate:bootstrap-crud-odm')
             ->setDescription('Generates a CRUD based on a Doctrine ODM document with Twitter Boostrap Theme')
             ->setAliases(array())
+            ->setDefinition(array(
+                new InputOption('entity', '', InputOption::VALUE_REQUIRED, 'The entity class name to initialize (shortcut notation)'),
+                new InputOption('route-prefix', '', InputOption::VALUE_REQUIRED, 'The route prefix'),
+                new InputOption('with-write', '', InputOption::VALUE_NONE, 'Whether or not to generate create, new and delete actions'),
+                new InputOption('with-grid', '', InputOption::VALUE_NONE, 'Whether or not to generate grid actions'),
+                new InputOption('format', '', InputOption::VALUE_REQUIRED, 'Use the format for configuration files (php, xml, yml, or annotation)', 'annotation'),
+                new InputOption('overwrite', '', InputOption::VALUE_NONE, 'Do not stop the generation if crud controller already exist, thus overwriting all generated files'),
+            ))
             ->setHelp(<<<EOT
 The <info>rgou:generate:bootstrap-crud-odm</info> command generates a CRUD based on a Doctrine ODM document.
 
@@ -52,22 +60,12 @@ The default command only generates the list and show actions.
 
 Using the --with-write option allows to generate the new, edit and delete actions.
 
+Using the --with-grid option allows to generate the grid actions.
+
 <info>php app/console doctrine:generate:crud --entity=AcmeBlogBundle:Post --route-prefix=post_admin --with-write</info>
 EOT
             );
-        
-/*
-        $this
-            ->setDefinition(array(
-                new InputOption('entity', '', InputOption::VALUE_REQUIRED, 'The entity class name to initialize (shortcut notation)'),
-                new InputOption('route-prefix', '', InputOption::VALUE_REQUIRED, 'The route prefix'),
-                new InputOption('with-write', '', InputOption::VALUE_NONE, 'Whether or not to generate create, new and delete actions'),
-                new InputOption('format', '', InputOption::VALUE_REQUIRED, 'Use the format for configuration files (php, xml, yml, or annotation)', 'annotation'),
-                new InputOption('overwrite', '', InputOption::VALUE_NONE, 'Do not stop the generation if crud controller already exist, thus overwriting all generated files'),
-            ))
- */       
-        
-        
+
     }
 
     protected function getGenerator()
@@ -114,6 +112,7 @@ EOT
         $format = Validators::validateFormat($input->getOption('format'));
         $prefix = $this->getRoutePrefix($input, $entity);
         $withWrite = $input->getOption('with-write');
+        $withGrid = $input->getOption('with-grid');
         $forceOverwrite = $input->getOption('overwrite');
 
         $dialog->writeSection($output, 'CRUD generation');
@@ -123,7 +122,7 @@ EOT
         $bundle      = $this->getContainer()->get('kernel')->getBundle($bundle);
 
         $generator = $this->getGenerator();
-        $generator->generate($bundle, $entity, $metadata, $format, $prefix, $withWrite, $forceOverwrite);
+        $generator->generate($bundle, $entity, $metadata, $format, $prefix, $withWrite, $withGrid, $forceOverwrite);
 
         $output->writeln('Generating the CRUD code: <info>OK</info>');
 
@@ -181,6 +180,17 @@ EOT
         $withWrite = $dialog->askConfirmation($output, $dialog->getQuestion('Do you want to generate the "write" actions', $withWrite ? 'yes' : 'no', '?'), $withWrite);
         $input->setOption('with-write', $withWrite);
 
+        // grid?
+        $withGrid = $input->getOption('with-grid') ?: false;
+        $output->writeln(array(
+            '',
+            'By default, the generator creates list with syncronous (no-ajax) listing and pagination.',
+            'You can also ask it to generate ajax grid actions and update list via ajax',
+            '',
+        ));
+        $withGrid = $dialog->askConfirmation($output, $dialog->getQuestion('Do you want to generate the "grid" actions', $withWrite ? 'yes' : 'no', '?'), $withWrite);
+        $input->setOption('with-grid', $withGrid);
+        
         // format
         $format = $input->getOption('format');
         $output->writeln(array(

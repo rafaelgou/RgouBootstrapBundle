@@ -16,18 +16,16 @@
         $form->bindRequest($request);
 
         if ($form->isValid()) {
+
             $dm = $this->get('doctrine.odm.mongodb.document_manager');
             $dm->persist($record);
             $dm->flush();
 
-            echo '<pre>'; print_r($request); exit;
-            
-            
             if ($request->request->get('_save_and_add')) {
             
                 $this->get('session')->getFlashBag()->add(
                     'success',
-                    'The record was successfully created. Create another below.'
+                    $this->get('translator')->trans('The record was successfully created. Create another below.', array(), 'rgoubootstrap')
                 );
                 return $this->redirect($this->generateUrl('{{ route_name_prefix }}_new'));
 
@@ -35,7 +33,7 @@
             
                 $this->get('session')->getFlashBag()->add(
                     'success',
-                    'The record was successfully created.'
+                    $this->get('translator')->trans('The record was successfully created.', array(), 'rgoubootstrap')
                 );
 
                 {% if 'show' in actions -%}
@@ -49,7 +47,7 @@
 
             $this->get('session')->getFlashBag()->add(
                 'error',
-                'There is a error in the form. Check below.'
+                $this->get('translator')->trans('There is a error in the form. Check below.', array(), 'rgoubootstrap')
             );
 
         }

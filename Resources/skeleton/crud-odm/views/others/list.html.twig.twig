@@ -1,0 +1,61 @@
+<table class="records_list table table-bordered table-condensed table-striped">
+    <thead>
+        <tr>
+        {%- for field, metadata in fields %}
+
+            <th>{{ "{{ '" ~ field|capitalize ~ "'|trans }}" }}</th>
+
+        {%- endfor %}
+
+            <th>{{ "{{ 'Actions'|trans({},'rgoubootstrap') }}" }}</th>
+        </tr>
+    </thead>
+    <tbody>
+    {{ '{% for record in pagination %}' }}
+        <tr>
+
+    {%- for field, metadata in fields %}
+        {%- if loop.first and ('show' in actions) %}
+
+            <td><a href="{{ "{{ path('"~ route_name_prefix ~"_show', { 'id': record.id }) }}" }}">{{ '{{ record.'~ field|replace({'_': ''}) ~' }}' }}</a></td>
+
+        {%- elseif metadata.type in ['datetimetz', 'datetime'] %}
+
+            <td>{{ '{% if record.'~ field|replace({'_': ''}) ~' %}{{ record.'~ field|replace({'_': ''}) ~'|date(\'Y-m-d H:i:s\') }}{% endif %}' }}</td>
+
+        {%- elseif metadata.type == 'date' %}
+
+            <td>{{ '{% if record.'~ field|replace({'_': ''}) ~' %}{{ record.'~ field|replace({'_': ''}) ~'|date(\'Y-m-d\') }}{% endif %}' }}</td>
+
+        {%- elseif metadata.type == 'time' %}
+
+            <td>{{ '{% if record.'~ field|replace({'_': ''}) ~' %}{{ record.'~ field|replace({'_': ''}) ~'|date(\'H:i:s\') }}{% endif %}' }}</td>
+
+        {%- elseif metadata.type == 'boolean' %}
+
+            <td><i class="{{ '{{ record.'~ field|replace({'_': ''}) ~' ? \'icon-check\' : \'\' }}' }}"></i></td>
+
+        {%- else %}
+
+            <td>{{ '{{ record.'~ field|replace({'_': ''}) ~' }}' }}</td>
+
+        {%- endif %}
+
+        {%- if loop.last %}
+
+            <td>
+                {%- include "views/others/actions.html.twig.twig" %}
+            </td>
+
+        {%- endif %}
+    {%- endfor %}
+
+        </tr>
+    {{ '{% endfor %}' }}
+    </tbody>
+</table>
+
+{# display navigation #}
+<div class="navigation">
+    {{ "{{ knp_pagination_render(pagination) }}" }}
+</div>

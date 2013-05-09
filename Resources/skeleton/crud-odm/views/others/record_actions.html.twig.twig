@@ -4,14 +4,14 @@
     </a>
 
 {% if ('edit' in actions) and (not hide_save) %}
-    <button class="btn btn-primary" type="submit" name="_save">
+    <button class="btn btn-primary" type="submit" name="_save" value="1">
         <i class="icon-save"></i>
         {{ "{{ 'Save'|trans({},'rgoubootstrap') }}" }}
     </button>
 {% endif %}
 
 {% if ('edit' in actions) and (not hide_save_add) %}
-    <button class="btn" type="submit" name="_save_and_add">
+    <button class="btn" type="submit" name="_save_and_add" value="1">
         <i class="icon-save"></i> <i class="icon-plus"></i> 
         {{ "{{ 'Save and Add'|trans({},'rgoubootstrap') }}" }}
     </button>

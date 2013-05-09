@@ -10,7 +10,6 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-//use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Doctrine\ODM\MongoDB\Mapping\ClassMetadataInfo;
 
 
@@ -84,14 +83,15 @@ class DoctrineCrudODMGenerator extends Generator
      *
      * @throws \RuntimeException
      */
-    public function generate(BundleInterface $bundle, $entity, ClassMetadataInfo $metadata, $format, $routePrefix, $needWriteActions, $forceOverwrite)
+    public function generate(BundleInterface $bundle, $entity, ClassMetadataInfo $metadata, $format, $routePrefix, $needWriteActions, $withGrid, $forceOverwrite)
     {
         $this->routePrefix = $routePrefix;
         $this->routeNamePrefix = str_replace('/', '_', $routePrefix);
         $this->actions = $needWriteActions ? array('index', 'show', 'new', 'edit', 'delete') : array('index', 'show');
-
         
-        //print_r($metadata); exit;
+        if ($withGrid) {
+             $this->actions[] = 'grid';
+        }
         
         if (count($metadata->identifier) > 1) {
             throw new \RuntimeException('The CRUD generator does not support entity classes with multiple primary keys.');
@@ -128,6 +128,12 @@ class DoctrineCrudODMGenerator extends Generator
         if (in_array('edit', $this->actions)) {
             $this->generateEditView($dir);
         }
+
+//        if (in_array('grid', $this->actions)) {
+//            $this->generateGridView($dir);
+//        } else {
+//            $this->generateListView($dir);
+//        }
 
         $this->generateTestClass();
         $this->generateConfiguration();
@@ -204,6 +210,7 @@ class DoctrineCrudODMGenerator extends Generator
 
         $this->renderFile($this->skeletonDir, 'controller.php.twig', $target, array(
             'actions'           => $this->actions,
+            'record_actions'    => $this->getRecordActions(),
             'route_prefix'      => $this->routePrefix,
             'route_name_prefix' => $this->routeNamePrefix,
             'dir'               => $this->skeletonDir,
@@ -213,6 +220,7 @@ class DoctrineCrudODMGenerator extends Generator
             'namespace'         => $this->bundle->getNamespace(),
             'entity_namespace'  => $entityNamespace,
             'format'            => $this->format,
+            'fields'            => $this->metadata->fieldMappings,
         ));
     }
 
@@ -259,6 +267,43 @@ class DoctrineCrudODMGenerator extends Generator
             'route_name_prefix' => $this->routeNamePrefix,
         ));
     }
+    
+//    /**
+//     * Generates the list.html.twig template in the final bundle.
+//     *
+//     * @param string $dir The path to the folder that hosts templates in the bundle
+//     */
+//    protected function generateListView($dir)
+//    {
+//        $this->renderFile($this->skeletonDir, 'views/list.html.twig.twig', $dir.'/list.html.twig', array(
+//            'dir'               => $this->skeletonDir,
+//            'entity'            => $this->entity,
+//            'fields'            => $this->metadata->fieldMappings,
+//            'actions'           => $this->actions,
+//            'record_actions'    => $this->getRecordActions(),
+//            'route_prefix'      => $this->routePrefix,
+//            'route_name_prefix' => $this->routeNamePrefix,
+//        ));
+//        
+//    }
+//    
+//    /**
+//     * Generates the grid.html.twig template in the final bundle.
+//     *
+//     * @param string $dir The path to the folder that hosts templates in the bundle
+//     */
+//    protected function generateGridView($dir)
+//    {
+//        $this->renderFile($this->skeletonDir, 'views/grid.html.twig.twig', $dir.'/grid.html.twig', array(
+//            'dir'               => $this->skeletonDir,
+//            'entity'            => $this->entity,
+//            'fields'            => $this->metadata->fieldMappings,
+//            'actions'           => $this->actions,
+//            'route_prefix'      => $this->routePrefix,
+//            'route_name_prefix' => $this->routeNamePrefix,
+//        ));
+//        
+//    }
 
     /**
      * Generates the show.html.twig template in the final bundle.
@@ -319,4 +364,6 @@ class DoctrineCrudODMGenerator extends Generator
         return array_filter($this->actions, function($item) {
             return in_array($item, array('show', 'edit'));
         });
-    }}
+    }
+    
+}

@@ -1,0 +1,17 @@
+{{ "{% block javascripts %}" }}
+<script type="text/javascript" src="{{ "{{ asset('bundles/rgoubootstrap/js/grid.js') }}" }}"></script>
+
+<script type="text/javascript">
+/*<![CDATA[*/
+$(function() {
+    var table_options = {
+        table:     '{{ route_name_prefix }}_table',
+        columns:   {{ "{{ grid_columns | raw }}" }},
+		itemsText: '{{ "{{ 'records'| trans({}, 'rgoubootstrap')  }}" }}',
+		itemText:  '{{ "{{ 'record'| trans({}, 'rgoubootstrap')  }}" }}'
+    }
+    rgouBootstrapGrid(table_options);
+});
+/*]]>*/
+</script>
+{{ "{% endblock javascripts %}" }}

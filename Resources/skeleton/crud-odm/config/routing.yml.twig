@@ -4,6 +4,12 @@
     defaults: { _controller: "{{ bundle }}:{{ entity }}:index" }
 {% endif %}
 
+{% if 'grid' in actions %}
+{{ route_name_prefix }}_ajaxdata:
+    pattern:  /ajaxdata
+    defaults: { _controller: "{{ bundle }}:{{ entity }}:ajaxdata",  _format: json }
+{% endif %}
+    
 {% if 'show' in actions %}
 {{ route_name_prefix }}_show:
     pattern:  /{id}/show

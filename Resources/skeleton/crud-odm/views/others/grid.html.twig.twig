@@ -1,0 +1,53 @@
+
+    <table id="{{ route_name_prefix }}_table" class="table table-bordered datagrid" data-url="{{ "{{ path('"~ route_name_prefix ~"_ajaxdata') }}" }}">
+		<thead>
+		<tr class="well">
+			<th>
+				<span class="datagrid-header-title"></span>
+				<div class="datagrid-header-left">
+                    <div class="span4">
+                        <div class="grid-controls">
+                            <select class="grid-pagesize span1">
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            </select>
+                            <span>{{ "{{ 'per page'|trans({}, 'rgoubootstrap') }}" }}</span>
+                        </div>
+                    </div>
+                    <div class="span4">
+                        <span><span class="grid-start"></span> - <span class="grid-end"></span> {{ "{{ 'of'|trans({}, 'rgoubootstrap') }}" }} <span class="grid-count"></span></span>
+                    </div>
+                </div>
+				<div class="datagrid-header-right pull-right">
+                    <button class="btn table_filter_toggle" data-label-visible="{{ "{{ 'Show Filters'|trans({}, 'rgoubootstrap') }}" }}" data-label-invisible="{{ "{{ 'Hide Filters'|trans({}, 'rgoubootstrap') }}" }}">
+                        <i class="icon-filter"></i>
+                        <span>{{ "{{ 'Show Filters'|trans({}, 'rgoubootstrap') }}" }}</span>
+                    </button>
+                    <button class="btn table_filter_clear"><i class="icon-trash"></i> {{ "{{ 'Clear Filters'|trans({}, 'rgoubootstrap') }}" }}</button>
+				</div>
+			</th>
+		</tr>
+		</thead>
+
+		<tfoot>
+		<tr class="well">
+			<th>
+                <div class="span4" style="display:none;">
+                    <div class="grid-pager">
+                        <button class="btn grid-prevpage"><i class="icon-chevron-left"></i></button>
+                        <span>{{ "{{ 'Page'|trans({}, 'rgoubootstrap') }}" }}</span>
+                        <div class="input-append">
+                            <input class="span1" type="text">
+                        </div>
+                        <span>of <span class="grid-pages"></span></span>
+                        <button class="btn grid-nextpage"><i class="icon-chevron-right"></i></button>
+                    </div>
+                </div>
+			</th>
+		</tr>
+		</tfoot>
+	</table>
+
+</div>

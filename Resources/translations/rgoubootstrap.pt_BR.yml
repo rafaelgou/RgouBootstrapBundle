@@ -14,13 +14,16 @@ Save: Salvar
 Save and Add: Salvar e Adicionar
 Actions: Ações
 or: ou
-'no records': 'nenhum registro'
-'record': 'registro'
-'%count% records': '%count% registros'
-'{0}no records': '{0}nenhum registro'
-'{1}record': '{1}registro'
-']1,Inf]%count% records': ']1,Inf]%count% %count% registros'
+of: de
+per page: por página
+record: registro
+records: registros
 '{0}no records|{1}record|]1,Inf]%count% records': '{0}nenhum registro|{1}registro|]1,Inf]%count% registros'
+Page: Página
+Search: Buscar
+Show Filters: Exibir Filtros
+Hide Filters: Ocultar Filtros
+Clear Filters: Limpar Filtros
 
 # Messages
 'Are you sure you want delete this record?': 'Tem certeza que deseja excluir este registro?'
@@ -29,3 +32,4 @@ or: ou
 'The record was successfully deleted.': 'O registro foi excluído com sucesso.'
 'There is an error on deleting the record.': 'Ocorreu um erro ao excluir o registro.'
 'The record was successfully created.': 'O registro foi criado com sucesso.'
+'The record was successfully created. Create another below.': 'O registro foi criado com sucesso. Crie um novo baixo'

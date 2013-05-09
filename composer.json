@@ -1,7 +1,7 @@
 {
     "name": "rgou/bootstrap-bundle",
     "type": "symfony-bundle",
-    "description": "Twitter Bootstrap Bundle for Symfony 2",
+    "description": "Twitter Bootstrap Symfony2 bundle with generator for Doctrine ORM and ODM",
     "keywords": ["symfony", "bundle", "twitter", "bootstrap", "theme"],
     "homepage": "http://github.com/rafaelgou/RgouBoostrapBundle",
     "license": "MIT",
@@ -17,7 +17,8 @@
         "php": ">=5.3.2",
         "knplabs/knp-paginator-bundle": "dev-master",
         "knplabs/knp-menu": "2.0.*@dev",
-        "knplabs/knp-menu-bundle": "2.0.*@dev"
+        "knplabs/knp-menu-bundle": "2.0.*@dev",
+        "sonata-project/intl-bundle": "2.2.*@dev"
     },
     "require-dev": {
         "symfony/framework-bundle": ">=2.1,<2.2-dev"

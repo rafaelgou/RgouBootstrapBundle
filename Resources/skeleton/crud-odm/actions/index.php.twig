@@ -12,11 +12,11 @@
 {% if 'grid' in actions %}
     {% if 'annotation' == format %}
         return array(
-            'grid_columns' => $this->getGridColumns()
+            'grid_columns' => json_encode(($this->getGridColumns())
         );
     {% else %}
         return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:index.html.twig', array(
-            'grid_columns' => $this->getGridColumns()
+            'grid_columns' => json_encode($this->getGridColumns())
         ));
     {% endif %}
 {% else %}

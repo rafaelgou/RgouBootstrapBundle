@@ -9,6 +9,8 @@
      */
     public function deleteAction($id)
     {
+        
+        
         $form = $this->createDeleteForm($id);
         $request = $this->getRequest();
 
@@ -17,6 +19,9 @@
         if ($form->isValid()) {
             $dm = $this->get('doctrine.odm.mongodb.document_manager');
 
+            $mongodbutil = $this->container->get('rgou_bootstrap.util.mongodb');
+            $id = $mongodbutil->prepareIdForFind($id);
+            
             $record = $dm->getRepository('{{ bundle }}:{{ entity }}')->find($id);
 
             if (!$record) {

@@ -11,15 +11,8 @@
     {
         $dm = $this->get('doctrine.odm.mongodb.document_manager');
 
-        // Check for autoincrement Id
-        if ($id == (int) $id) {
-            $id = (int) $id;
-        }
-
-        // Check for autoincrement Id
-        if ($id == (int) $id) {
-            $id = (int) $id;
-        }
+        $mongodbutil = $this->container->get('rgou_bootstrap.util.mongodb');
+        $id = $mongodbutil->prepareIdForFind($id);
 
         $record = $dm->getRepository('{{ bundle }}:{{ entity }}')->find($id);
 

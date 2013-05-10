@@ -12,7 +12,7 @@
 
         $dm = $this->get('doctrine.odm.mongodb.document_manager');
 
-        $mongodbutil = $this->container->get('rgou_bootstrap.util.mongodb');        
+        $mongodbutil = $this->container->get('rgou_bootstrap.util.mongodb');
         
         $query = $dm->getRepository('{{ bundle }}:{{ entity }}')
                  ->createQueryBuilder()
@@ -24,21 +24,30 @@
         if ($this->get('request')->query->get('filter', false)) {
         
             $filters    = $this->get('request')->query->get('filter');
-            $fieldTypes = array(
-            {%- for fieldname,field in fields %}
-                
-                '{{ fieldname }}' => '{{ field.type }}',
-
-            {%- endfor %}
-
-            );
+            $fieldMetadata = $this->getFieldMetadata();
         
-            foreach($this->get('request')->query->get('filter', false) as $field => $value) {
+            foreach($this->get('request')->query->get('filter') as $fieldName => $value) {
             
-                $fieldName = str_replace('filter_', '', $field);
-                $value     = $mongodbutil->prepareValueForQuery($fieldTypes[$fieldName], $value);
+                $fieldMetadata = $this->getFieldMetadata($fieldName);
+            
+                if (is_array($value)) {
+ 
+                    if (array_key_exists('from', $value)) {
+                       $value['from'] = $mongodbutil->prepareValueForQuery($fieldMetadata['type'], $value['from']);
+                        $query->field($fieldName)->gte($value['from']);
+                    }
+
+                    if (array_key_exists('to', $value)) {
+                        $value['to']   = $mongodbutil->prepareValueForQuery($fieldMetadata['type'], $value['to']);
+                        $query->field($fieldName)->lte($value['to']);
+                    }
+
+                } else {
                 
-                $query->field($fieldName)->equals($value);
+                    $value = $mongodbutil->prepareValueForQuery($fieldMetadata['type'], $value);
+                    $query->field($fieldName)->equals($value);
+                    
+                }
                 
             }
             
@@ -72,17 +81,17 @@
     {
         $data = array();
         
+        $mongodbutil = $this->container->get('rgou_bootstrap.util.mongodb');
+        $inflector   = $this->container->get('rgou_bootstrap.util.inflector');
+
         foreach($pagination as $record)
         {
-            unset($recordData);
             $recordData = new \StdClass;
             
-        {%- for fieldname,field in fields %}
-        
-            $recordData->{{ fieldname }} = $record->get{{ fieldname | camelize }}();
-            
-        {%- endfor %}
-
+            foreach($this->getFieldMetadata() as $fieldName => $metadata) {
+                $method = 'get' . $inflector->camelize($fieldName);
+                $recordData->$fieldName = $mongodbutil->prepareValueForView($metadata['type'], $record->$method());
+            }
             
             $actionsView = array();
             
@@ -98,7 +107,7 @@
             {%- endfor %}
 
 
-            $recordData->actions = implode('', $actionsView);
+            $recordData->record_actions = implode('', $actionsView);
             
             $data[] = $recordData;
             
@@ -108,19 +117,73 @@
         
     }
 
+    protected function getFieldMetadata($fieldName = null)
+    {
+        $fieldMetadata = array();
+    
+        foreach ($this->getGridColumns() as $field) {
+            if (array_key_exists('type', $field) && !in_array($field['property'], array('record_actions'))) {
+                $fieldMetadata[$field['property']] = $field;
+            }
+        }
+        
+        if (null === $fieldName) {
+            return $fieldMetadata;
+        } elseif (array_key_exists($fieldName, $fieldMetadata)) {
+            return $fieldMetadata[$fieldName];
+        } else {
+            return null;
+        }
+        
+        
+    }    
+    
+    /**
+     * Get FuelUX fields configuration
+     * 
+     * A field has this info:
+     *
+     * - property (required):      fieldname, same as table fieldname 
+     * - type     (required):      model type (not used for FuelUX, but used on filter query)
+     * - label    (required):      label on thead
+     * - sortable (optional):      if the field will be allowed to sort - true/false, default true
+     * - filtertype (optional):    type of filter, default input
+     *                             - false:     not filtered
+     *                             - input:     normal input text
+     *                             - date:      input date, 
+     *                             - daterange: two input date ("from" and "to") 
+     *                             - select:    combobox with select (require filteroptions below)
+     * - filteroptions (optional): array of select options in format
+     *                              array('key1' => 'value1), 'key2' => 'value2),)
+     *
+     * @return array
+     */
     protected function getGridColumns()
     {
-        $columns = array();
-    
+        $columns = array(
+        
     {%- for fieldname,field in fields %}
 
-        $columns[] = array('property' => '{{ fieldname }}', 'label'    => '{{ fieldname | titleize }}', 'sortable' => true, );
+            array(
+                'property'      => '{{ fieldname }}', 
+                'type'          => '{{ field.type }}', 
+                'label'         => '{{ fieldname | titleize }}', 
+                'sortable'      => true,
+                'filtertype'    => '{% if field.type == 'date' %}daterange{% else %}input{% endif %}',
+                'filteroptions' => array(),
+            ),
 
     {%- endfor %}
 
-        // Do not change this unless you want to desactivate all actions
-        $columns[] = array('property' => 'actions', 'label'    => $this->get('translator')->trans('Actions', array(), 'rgoubootstrap'), 'sortable' => false,);
+            // Do not change this unless you want to desactivate all actions
+            array(
+                'property'   => 'record_actions', 
+                'label'      => $this->get('translator')->trans('Actions', array(), 'rgoubootstrap'), 
+                'sortable'   => false,
+                'filtertype' => false,
+            )
+        );
         
-        return json_encode($columns);
+        return $columns;
     }
 

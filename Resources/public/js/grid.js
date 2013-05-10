@@ -31,10 +31,10 @@ FuelUXDataSource.prototype = {
 	 */
 	data: function (options, callback) {
 
-		var url         = this._url;
-		var table       = this._table;
-		var self        = this;
-        var requestData = new Object();
+		url         = this._url;
+		table       = this._table;
+		self        = this;
+        requestData = new Object();
 
         requestData.pageSize = options.pageSize;
         requestData.page     = options.pageIndex + 1;
@@ -48,19 +48,19 @@ FuelUXDataSource.prototype = {
             requestData.search = options.search;
         }
         
-        var filter = new Object();
-        $('#' + table + ' .filter input').each(function() {
+        var formFilter = $('<form>');
+        $('#' + table + ' .filter input, #' + table + ' .filter select').each(function() {
             if ($(this).val() != '') {
-                filter[$(this).attr('id')] = $(this).val();
+                clone = $(this).clone();
+                clone.val($(this).val());
+                formFilter.append(clone);
             }
         });
-        requestData.filter = filter;
         
         $.ajax(url, {
 
-            // Set JSONP options for Flickr API
             dataType: 'json',
-            data: requestData,
+            data: $.param(requestData) + '&' + formFilter.serialize(),
             type: 'GET'
 
         }).done(function (response) {
@@ -79,7 +79,7 @@ FuelUXDataSource.prototype = {
             if (self._formatter) self._formatter(data);
 
             // Return data to Datagrid
-            callback({ data: data, start: start, end: end, count: count, pages: pages, page: page });
+            callback({data: data, start: start, end: end, count: count, pages: pages, page: page});
         });
 
 	}
@@ -100,27 +100,72 @@ function rgouBootstrapGrid(options)
 		itemText: options.itemText
 	});
 
-    filterRow = '';
+    /*
+     * Creating filter row
+     */
+    filterRow = $('<tr id="' + options.table + '_table_filter" class="filter alert alert-warning" style="display:none" />');
+    
     $.each( options.columns, function(key, data) {
-        if ( data.property != 'actions' ) {
-            filterRow = filterRow + '<th><input id="filter_' + data.property +   '" style="width:99%"></th>';
+        if ( data.property != 'record_actions' && data.property != '') {
+            
+            if (data.filtertype == undefined) {
+                data.filtertype = false;
+            }
+            
+            if (data.filtertype == 'select' && data.filteroptions == undefined) {
+                data.filtertype = 'input';
+            }
+            
+            if (data.filtertype) {
+                switch (data.filtertype) {
+                    case 'select':
+                        select = $('<select id="filter_' + data.property + '" name="filter[' + data.property + ']" style="width:90%;" />');
+                        count = 0;
+                        $.each(data.filteroptions, function(key, item) {
+                            count = count + 1;
+                            select.append($('<option value="' + item[0] + '" />').append(item[1]));
+                        });
+                        filterRow.append($('<th />').append(select));
+                        break;
+
+                    case 'date':
+                        filterRow.append($('<th />').append('<input id="filter_' + data.property +   '" name="filter[' + data.property + ']" type="date" style="width:90%" class="datepicker" />'));
+                        break;
+
+                    case 'daterange':
+                        filterRow.append($('<th />').append(
+                            '<input id="filter_' + data.property +   '_from" name="filter[' + data.property + '][from]" type="date" style="width:90%" class="datepicker" />'
+                            + '<br/>' + 
+                            '<input id="filter_' + data.property +   '_to" name="filter[' + data.property + '][to]" type="date" style="width:90%" class="datepicker" />'
+                        ));
+                        break;
+
+                    default:
+                    case 'input':
+                        filterRow.append($('<th />').append('<input id="filter_' + data.property +   '" name="filter[' + data.property + ']" type="text" style="width:90%" />'));
+                        break;
+                }
+            } else {
+                filterRow.append($('<th />').append('&nbsp;'));
+            }
+                
         } else {
-            filterRow = filterRow + '<th>&nbsp;</th>';
+            filterRow.append($('<th />').append('&nbsp;'));
         }
     });
     
-    $('#' + options.table + ' thead').append(
-        '<tr id="' + options.table + '_table_filter" class="filter alert alert-warning" style="display:none">'
-        + filterRow
-        + '<tr>'
-    );   
+    $('#' + options.table + ' thead').append(filterRow);   
  
-    // Reload data on filter change
-    $('#' + options.table + ' .filter input').on('change', function() {
+    /*
+     * Reload data on filters change
+     */ 
+    $('#' + options.table + ' .filter input, #' + options.table + ' .filter select').on('change', function() {
         $('#' + options.table).data('datagrid').reload();
     });
 
-    // Toggle filter row
+    /*
+     * Toggle filter row
+     */ 
     $('#' + options.table + ' button.table_filter_toggle').on('click', function() {
        $('#' + options.table + '_table_filter').toggle();
        if ($('#' + options.table + '_table_filter').is(':visible')) {
@@ -131,7 +176,9 @@ function rgouBootstrapGrid(options)
        $('#' + options.table + ' button.table_filter_toggle span').html(label_toggle);
     });
     
-    // Clear filters
+    /*
+     * Clear filters
+     */ 
     $('#' + options.table + ' button.table_filter_clear').on('click', function() {
         $.each( options.columns, function(key, data) {
             if ( data.property != 'actions' ) {

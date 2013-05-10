@@ -2,18 +2,30 @@
 
 namespace Rgou\BootstrapBundle\Util;
 
+
+use Sonata\IntlBundle\Templating\Helper\DateTimeHelper;
+use Sonata\IntlBundle\Templating\Helper\NumberHelper;
+
 /**
  * MongoDB Utils
  *
  * @author Rafael Goulart <rafaelgou@gmail.com>
  */
-
 class MongoDB
 {
 
     const ACCENT_STRINGS = 'ŠŒŽšœžŸ¥µÀÁÂÃÄÅÆÇÈÉÊËẼÌÍÎÏĨÐÑÒÓÔÕÖØÙÚÛÜÝßàáâãäåæçèéêëẽìíîïĩðñòóôõöøùúûüýÿ';
     const NO_ACCENT_STRINGS = 'SOZsozYYuAAAAAAACEEEEEIIIIIDNOOOOOOUUUUYsaaaaaaaceeeeeiiiiionoooooouuuuyy';
 
+    protected $datetimehelper;
+    protected $numberhelper;
+    
+    public function __construct(DateTimeHelper $datetimehelper, NumberHelper $numberhelper)
+    {
+        $this->datetimehelper = $datetimehelper;
+        $this->numberhelper   = $numberhelper;
+    }    
+    
     /**
     * Returns a string with accent to REGEX expression to find any combinations
     * in accent insentive way
@@ -82,9 +94,8 @@ class MongoDB
                 break;
 
             case 'date':
-                $value = new \MongoDate(strtotime($value));
+                $value = new \MongoDate($this->datetimehelper->getDatetime($value)->getTimestamp());
                 break;
-                
 
             default:
             case 'bin_data_custom':
@@ -103,5 +114,59 @@ class MongoDB
         
         return $value;
     }
+
+    public function prepareValueForView($type, $value)
+    {
+    
+        switch($type) {
+            
+            case 'boolean':
+                $value = $value ? 'Yes' : 'No';
+                break;
+                
+            case 'float':
+                $value = $this->$numberhelper->formatDecimal($value);
+                break;
+                
+            case 'date':
+                $value = $this->datetimehelper->formatDate($value);
+                break;
+                
+            default:
+            case 'id':
+            case 'custom_id': // @MongoDB/Id(strategy="AUTOINCREMENT")
+            case 'string':
+            case 'int':
+            case 'bin_data_custom':
+            case 'bin_data_func':
+            case 'bin_data_md5':
+            case 'bin_data':
+            case 'bin_data_uuid':
+            case 'file':
+            case 'hash':
+            case 'int':
+            case 'key':
+            case 'increment':
+            case 'timestamp':
+                break;
+        }
+        
+        return $value;
+    }
+    
+    public function prepareIdForFind($id)
+    {
+        $tmpId = (int) $id;
+
+        // Check for autoincrement Id
+        if ($id == (string) $tmpId) {
+            $id = (int) $id;
+        }
+          
+        return $id;
+    }
+
+    
+    
     
 }

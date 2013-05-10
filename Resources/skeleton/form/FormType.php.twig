@@ -6,14 +6,16 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
+// Just testing
+
 class {{ form_class }} extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-        {%- for field in fields %}
+        {%- for fieldname, field in fields %}
 
-            ->add('{{ field }}')
+            ->add('{{ fieldname }}')
 
         {%- endfor %}
 

@@ -1,5 +1,5 @@
 parameters:
-#    rgou_bootstrap.example.class: Rgou\BootstrapBundle\Example
+# 
 
 services:
 
@@ -8,6 +8,7 @@ services:
   
     rgou_bootstrap.util.mongodb:
         class: Rgou\BootstrapBundle\Util\MongoDB
+        arguments: ["@sonata.intl.templating.helper.datetime", "@sonata.intl.templating.helper.number"]        
   
     rgou_bootstrap.twig.globals:
         class: Rgou\BootstrapBundle\Twig\Extension\GlobalsExtension

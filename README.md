@@ -117,6 +117,28 @@ Add to `app/config/config.yml`:
         templating: false
         default_renderer: twig
 
+## Avoiding Twig error messages
+
+You can get in DEV mode the following twig error message:
+
+    Variable "container_class" does not exist in RgouBootstrapBundle::base.html.twig at line 13
+
+This happens because of `strict_variables` environment configurations defined to *true* on DEV.
+
+To avoid this, search bellow in app\config\config.yml`
+
+    twig:
+        debug:            %kernel.debug%
+        strict_variables: %kernel.debug%
+
+and change to:
+
+    twig:
+        debug:            %kernel.debug%
+        strict_variables: fals
+
+See more: [Twig - Environment Options](http://twig.sensiolabs.org/doc/api.html#environment-optionswig)
+
 ## Usage
 
    See [Doc Index](Resources/doc/index.md) for full usage documentation

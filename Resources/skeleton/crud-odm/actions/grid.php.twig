@@ -90,7 +90,8 @@
             
             foreach($this->getFieldMetadata() as $fieldName => $metadata) {
                 $method = 'get' . $inflector->camelize($fieldName);
-                $recordData->$fieldName = $mongodbutil->prepareValueForView($metadata['type'], $record->$method());
+                $fielddata = $mongodbutil->prepareValueForView($metadata['type'], $record->$method());
+                $recordData->$fieldName = is_object($fielddata) ? (string) $fielddata : $fielddata;
             }
             
             $actionsView = array();

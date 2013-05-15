@@ -50,6 +50,13 @@ opacity: .25;
 }
 
 /* FuelUX Datatable */
-.sortable {
+.sortable:hover {
     cursor: hand;
+}
+.grid-pager input {
+    margin-top: 10px; 
+    text-align: center;
+}
+.grid-controls select{
+    margin: 0;
 }

@@ -11,9 +11,8 @@
     public function createAction()
     {
         $record  = new {{ entity_class }}();
-        $request = $this->getRequest();
         $form    = $this->createForm(new {{ entity_class }}Type(), $record);
-        $form->bindRequest($request);
+        $form->bind($this->getRequest());
 
         if ($form->isValid()) {
 
@@ -47,7 +46,7 @@
 
             $this->get('session')->getFlashBag()->add(
                 'error',
-                $this->get('translator')->trans('There is a error in the form. Check below.', array(), 'rgoubootstrap')
+                $this->get('translator')->trans('There is an error in the form. Check below.', array(), 'rgoubootstrap')
             );
 
         }

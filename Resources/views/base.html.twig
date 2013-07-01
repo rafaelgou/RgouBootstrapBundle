@@ -10,7 +10,8 @@
    (such as navbars and footer)  
     
 #}
-{% set container_class = 'container-fluid' %}
+{% if container_class is null %}{% set container_class = 'container-fluid' %}{% endif %}
+
 <!DOCTYPE html>
 <html>
 <head>

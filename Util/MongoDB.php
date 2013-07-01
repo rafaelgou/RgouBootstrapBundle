@@ -125,7 +125,7 @@ class MongoDB
                 break;
                 
             case 'float':
-                $value = $this->$numberhelper->formatDecimal($value);
+                $value = $this->numberhelper->formatDecimal($value);
                 break;
                 
             case 'date':

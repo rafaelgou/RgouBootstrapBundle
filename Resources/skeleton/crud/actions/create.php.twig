@@ -11,9 +11,8 @@
     public function createAction()
     {
         $record  = new {{ entity_class }}();
-        $request = $this->getRequest();
         $form    = $this->createForm(new {{ entity_class }}Type(), $record);
-        $form->bindRequest($request);
+        $form->bind($this->getRequest());
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();

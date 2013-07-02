@@ -30,5 +30,19 @@
         "psr-0": { "Rgou\\BootstrapBundle": "" }
     },
     "minimum-stability": "dev",
-    "target-dir": "Rgou/BootstrapBundle"
+    "target-dir": "Rgou/BootstrapBundle",
+    "repositories": [
+        {
+            "type":"vcs",
+            "url":"/var/www/citydata/Portal/bundles/SonataIntlBundle"
+        },
+        {
+            "type":"vcs",
+            "url":"/var/www/citydata/Portal/bundles/KnpMenu"
+        },
+        {
+            "type":"vcs",
+            "url":"/var/www/citydata/Portal/bundles/KnpMenuBundle"
+        }
+    ]
 }

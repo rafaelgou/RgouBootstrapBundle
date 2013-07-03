@@ -14,44 +14,90 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class DoctrineCrudGenerator extends BaseDoctrineCrudGenerator
 {
-    /**
-     * @var ContainerInterface $container
-     */
     private $container;
 
     /**
      * @param Filesystem         $filesystem  A Filesystem
-     * @param string             $skeletonDir A dir string
      * @param ContainerInterface $container   The service container
      */
-    public function __construct(Filesystem $filesystem, $skeletonDir, ContainerInterface $container)
+    public function __construct(Filesystem $filesystem, ContainerInterface $container)
     {
-        parent::__construct($filesystem, $skeletonDir);
+        parent::__construct($filesystem);
 
         $this->container = $container;
     }
 
     /**
-     * @param string $skeletonDir A dir string
-     * @param string $template    A Twig template string
-     * @param array  $parameters  Paraneters injected to template
+     * Generates the index.html.twig template in the final bundle.
      *
-     * @return string
+     * @param string $dir The path to the folder that hosts templates in the bundle
      */
-    protected function render($skeletonDir, $template, $parameters)
+    protected function generateIndexView($dir)
     {
-        $twig = new \Twig_Environment(
-            new \Twig_Loader_Filesystem($skeletonDir),
-            array(
-                'debug'            => true,
-                'cache'            => false,
-                'strict_variables' => true,
-                'autoescape'       => false
-            )
-        );
-
-        $twig->addExtension(new GlobalsExtension($this->container));
-
-        return $twig->render($template, $parameters);
+        $this->renderFile('crud/views/index.html.twig.twig', $dir.'/index.html.twig', array(
+            'bundle'            => $this->bundle->getName(),
+            'entity'            => $this->entity,
+            'fields'            => $this->metadata->fieldMappings,
+            'actions'           => $this->actions,
+            'record_actions'    => $this->getRecordActions(),
+            'route_prefix'      => $this->routePrefix,
+            'route_name_prefix' => $this->routeNamePrefix,
+            'rgou_bootstrap'    => $this->container->getParameter('rgou_bootstrap'),
+        ));
     }
+
+    /**
+     * Generates the show.html.twig template in the final bundle.
+     *
+     * @param string $dir The path to the folder that hosts templates in the bundle
+     */
+    protected function generateShowView($dir)
+    {
+        $this->renderFile('crud/views/show.html.twig.twig', $dir.'/show.html.twig', array(
+            'bundle'            => $this->bundle->getName(),
+            'entity'            => $this->entity,
+            'fields'            => $this->metadata->fieldMappings,
+            'actions'           => $this->actions,
+            'route_prefix'      => $this->routePrefix,
+            'route_name_prefix' => $this->routeNamePrefix,
+            'rgou_bootstrap'    => $this->container->getParameter('rgou_bootstrap'),
+        ));
+    }
+
+    /**
+     * Generates the new.html.twig template in the final bundle.
+     *
+     * @param string $dir The path to the folder that hosts templates in the bundle
+     */
+    protected function generateNewView($dir)
+    {
+        $this->renderFile('crud/views/new.html.twig.twig', $dir.'/new.html.twig', array(
+            'bundle'            => $this->bundle->getName(),
+            'entity'            => $this->entity,
+            'route_prefix'      => $this->routePrefix,
+            'route_name_prefix' => $this->routeNamePrefix,
+            'actions'           => $this->actions,
+            'rgou_bootstrap'    => $this->container->getParameter('rgou_bootstrap'),
+        ));
+    }
+
+    /**
+     * Generates the edit.html.twig template in the final bundle.
+     *
+     * @param string $dir The path to the folder that hosts templates in the bundle
+     */
+    protected function generateEditView($dir)
+    {
+        $this->renderFile('crud/views/edit.html.twig.twig', $dir.'/edit.html.twig', array(
+            'route_prefix'      => $this->routePrefix,
+            'route_name_prefix' => $this->routeNamePrefix,
+            'entity'            => $this->entity,
+            'bundle'            => $this->bundle->getName(),
+            'actions'           => $this->actions,
+            'rgou_bootstrap'    => $this->container->getParameter('rgou_bootstrap'),
+        ));
+    }
+
+
+
 }

@@ -26,7 +26,6 @@ class DoctrineCrudODMGenerator extends Generator
     private $container;
 
     protected $filesystem;
-    protected $skeletonDir;
     protected $routePrefix;
     protected $routeNamePrefix;
     protected $bundle;
@@ -37,40 +36,15 @@ class DoctrineCrudODMGenerator extends Generator
 
     /**
      * @param Filesystem         $filesystem  A Filesystem
-     * @param string             $skeletonDir A dir string
      * @param ContainerInterface $container   The service container
      */
-    public function __construct(Filesystem $filesystem, $skeletonDir, ContainerInterface $container)
+    public function __construct(Filesystem $filesystem, ContainerInterface $container)
     {
-        $this->filesystem  = $filesystem;
-        $this->skeletonDir = $skeletonDir;
-        $this->container   = $container;
+        parent::__construct($filesystem);
+
+        $this->container = $container;
     }
 
-    /**
-     * @param string $skeletonDir A dir string
-     * @param string $template    A Twig template string
-     * @param array  $parameters  Paraneters injected to template
-     *
-     * @return string
-     */
-    protected function render($skeletonDir, $template, $parameters)
-    {
-        $twig = new \Twig_Environment(
-            new \Twig_Loader_Filesystem($skeletonDir),
-            array(
-                'debug'            => true,
-                'cache'            => false,
-                'strict_variables' => true,
-                'autoescape'       => false
-            )
-        );
-
-        $twig->addExtension(new GlobalsExtension($this->container));
-
-        return $twig->render($template, $parameters);
-    }
-    
     /**
      * Generate the CRUD controller.
      *
@@ -265,46 +239,10 @@ class DoctrineCrudODMGenerator extends Generator
             'record_actions'    => $this->getRecordActions(),
             'route_prefix'      => $this->routePrefix,
             'route_name_prefix' => $this->routeNamePrefix,
+            'rgou_bootstrap'    => $this->container->getParameter('rgou_bootstrap'),
         ));
     }
     
-//    /**
-//     * Generates the list.html.twig template in the final bundle.
-//     *
-//     * @param string $dir The path to the folder that hosts templates in the bundle
-//     */
-//    protected function generateListView($dir)
-//    {
-//        $this->renderFile($this->skeletonDir, 'views/list.html.twig.twig', $dir.'/list.html.twig', array(
-//            'dir'               => $this->skeletonDir,
-//            'entity'            => $this->entity,
-//            'fields'            => $this->metadata->fieldMappings,
-//            'actions'           => $this->actions,
-//            'record_actions'    => $this->getRecordActions(),
-//            'route_prefix'      => $this->routePrefix,
-//            'route_name_prefix' => $this->routeNamePrefix,
-//        ));
-//        
-//    }
-//    
-//    /**
-//     * Generates the grid.html.twig template in the final bundle.
-//     *
-//     * @param string $dir The path to the folder that hosts templates in the bundle
-//     */
-//    protected function generateGridView($dir)
-//    {
-//        $this->renderFile($this->skeletonDir, 'views/grid.html.twig.twig', $dir.'/grid.html.twig', array(
-//            'dir'               => $this->skeletonDir,
-//            'entity'            => $this->entity,
-//            'fields'            => $this->metadata->fieldMappings,
-//            'actions'           => $this->actions,
-//            'route_prefix'      => $this->routePrefix,
-//            'route_name_prefix' => $this->routeNamePrefix,
-//        ));
-//        
-//    }
-
     /**
      * Generates the show.html.twig template in the final bundle.
      *
@@ -319,6 +257,7 @@ class DoctrineCrudODMGenerator extends Generator
             'actions'           => $this->actions,
             'route_prefix'      => $this->routePrefix,
             'route_name_prefix' => $this->routeNamePrefix,
+            'rgou_bootstrap'    => $this->container->getParameter('rgou_bootstrap'),
         ));
     }
 
@@ -335,6 +274,7 @@ class DoctrineCrudODMGenerator extends Generator
             'route_name_prefix' => $this->routeNamePrefix,
             'entity'            => $this->entity,
             'actions'           => $this->actions,
+            'rgou_bootstrap'    => $this->container->getParameter('rgou_bootstrap'),
         ));
     }
 
@@ -351,6 +291,7 @@ class DoctrineCrudODMGenerator extends Generator
             'route_name_prefix' => $this->routeNamePrefix,
             'entity'            => $this->entity,
             'actions'           => $this->actions,
+            'rgou_bootstrap'    => $this->container->getParameter('rgou_bootstrap'),
         ));
     }
 

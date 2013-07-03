@@ -68,14 +68,11 @@ EOT
 
     }
 
-    protected function getGenerator()
+    protected function getGenerator($bundle = null)
     {
         if (null === $this->generator) {
-            $this->generator = new DoctrineCrudODMGenerator(
-                $this->getContainer()->get('filesystem'),
-                __DIR__.'/../Resources/skeleton/crud-odm',
-                $this->getContainer()
-            );
+            $this->generator = new DoctrineCrudODMGenerator($this->getContainer()->get('filesystem'), $this->getContainer());
+            $this->generator->setSkeletonDirs(array(__DIR__ . '/../Resources/skeleton-odm', __DIR__ . '/../Resources/skeleton-odm/crud'));
         }
 
         return $this->generator;
@@ -235,10 +232,11 @@ EOT
         }
     }
 
-    protected function getFormGenerator()
+    protected function getFormGenerator($bundle = null)
     {
         if (null === $this->formGenerator) {
-            $this->formGenerator = new DoctrineFormGenerator($this->getContainer()->get('filesystem'),  __DIR__.'/../Resources/skeleton/form');
+            $this->formGenerator = new DoctrineFormGenerator($this->getContainer()->get('filesystem'));
+            $this->formGenerator->setSkeletonDirs( __DIR__ . '/../Resources/skeleton-odm/form');
         }
 
         return $this->formGenerator;

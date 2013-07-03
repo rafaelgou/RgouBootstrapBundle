@@ -13,6 +13,7 @@ namespace Rgou\BootstrapBundle\Command;
 
 use Rgou\BootstrapBundle\Generator\DoctrineCrudGenerator;
 use Sensio\Bundle\GeneratorBundle\Command\GenerateDoctrineCrudCommand as BaseGenerateDoctrineCrudCommand;
+use Sensio\Bundle\GeneratorBundle\Generator\DoctrineFormGenerator;
 
 /**
  * Generates a CRUD for a Doctrine entity.
@@ -22,6 +23,7 @@ use Sensio\Bundle\GeneratorBundle\Command\GenerateDoctrineCrudCommand as BaseGen
 class GenerateDoctrineCrudCommand extends BaseGenerateDoctrineCrudCommand
 {
     private $generator;
+    private $formGenerator;
 
     /**
      * @see Command
@@ -47,16 +49,24 @@ EOT
             );
     }
 
-    protected function getGenerator()
+    protected function getGenerator($bundle = null)
     {
         if (null === $this->generator) {
-            $this->generator = new DoctrineCrudGenerator(
-                $this->getContainer()->get('filesystem'),
-                __DIR__.'/../Resources/skeleton/crud',
-                $this->getContainer()
-            );
+            $this->generator = new DoctrineCrudGenerator($this->getContainer()->get('filesystem'), $this->getContainer());
+            $this->generator->setSkeletonDirs(array(__DIR__ . '/../Resources/skeleton', __DIR__ . '/../Resources/skeleton/crud'));
         }
 
         return $this->generator;
     }
+
+    protected function getFormGenerator($bundle = null)
+    {
+        if (null === $this->formGenerator) {
+            $this->formGenerator = new DoctrineFormGenerator($this->getContainer()->get('filesystem'));
+            $this->formGenerator->setSkeletonDirs(array( __DIR__ . '/../Resources/skeleton',  __DIR__ . '/../Resources/skeleton/form'));
+        }
+
+        return $this->formGenerator;
+    }
+
 }

@@ -4,7 +4,7 @@
 {{ "{{ '" ~ entity ~ "' }} {{ 'list'|trans({},'rgoubootstrap') }}" }}
     {% if 'new' in actions %}
     <small> 
-        {{ "({% transchoice pagination.totalItemCount with {'%count%': pagination.totalItemCount} from 'rgoubootstrap' %}{0}no records|{1}record|]1,Inf]%count% records{% endtranschoice %}" }})
+        {{ "({% transchoice pagination.totalItemCount with {'%count%': pagination.totalItemCount} from 'rgoubootstrap' %}{0}no records|{1}1 record|]1,Inf]%count% records{% endtranschoice %}" }})
         {{ "{{ 'or'|trans({},'rgoubootstrap') }}" }}
         <a title="{{ "{{ 'New'|trans({},'rgoubootstrap') }}" }}" class="btn btn-small" href="{{ "{{ path('"~ route_name_prefix ~"_new') }}" }}">
         <i class="icon-plus icon-white"></i> {{ "{{ 'New'|trans({},'rgoubootstrap') }}" }}

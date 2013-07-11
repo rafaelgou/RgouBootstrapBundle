@@ -18,7 +18,7 @@ of: de
 per page: por página
 record: registro
 records: registros
-'{0}no records|{1}record|]1,Inf]%count% records': '{0}nenhum registro|{1}registro|]1,Inf]%count% registros'
+'{0}no records|{1}1 record|]1,Inf]%count% records': '{0}nenhum registro|{1}1 registro|]1,Inf]%count% registros'
 Page: Página
 Search: Buscar
 Show Filters: Exibir Filtros

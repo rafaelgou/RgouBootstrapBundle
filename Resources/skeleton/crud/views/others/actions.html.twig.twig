@@ -1,6 +1,6 @@
                 {%- for action in record_actions %}
 
-                <a class="btn btn-mini" href="{{ "{{ path('"~ route_name_prefix ~"_"~ action ~"', { 'id': record.id }) }}" }}">
+                <a class="btn btn-default btn-default btn-xs" href="{{ "{{ path('"~ route_name_prefix ~"_"~ action ~"', { 'id': record.id }) }}" }}">
                     {% if action == 'edit' %}
                     <i class="icon-pencil"></i>
                     {% endif %}

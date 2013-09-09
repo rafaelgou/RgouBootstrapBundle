@@ -2,11 +2,8 @@
 
 {% block head_stylesheets %}
     {% stylesheets
-    'bundles/rgoubootstrap/bootstrap/css/bootstrap-combined.no-icons.min.css'
-    'bundles/rgoubootstrap/bootstrap/css/bootstrap-responsive.min.css'
+    'bundles/rgoubootstrap/bootstrap/css/bootstrap.min.css'
     'bundles/rgoubootstrap/font-awesome/css/font-awesome.min.css'
-    'bundles/rgoubootstrap/fuelux/css/fuelux.min.css'
-    'bundles/rgoubootstrap/fuelux/css/fuelux-responsive.min.css'
     'bundles/rgoubootstrap/css/main.css'
     output='css/compiled.css'
     filter='cssrewrite' 
@@ -14,6 +11,10 @@
     %}
     <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen" />
     {% endstylesheets %}
+{#
+    'bundles/rgoubootstrap/fuelux/css/fuelux.min.css'
+    'bundles/rgoubootstrap/fuelux/css/fuelux-responsive.min.css'
+#}
 {% endblock head_stylesheets %}
 
 {% block head_javascripts %}
@@ -48,13 +49,20 @@
 
 {% block footer_javascripts %}
     {% javascripts
-        'bundles/rgoubootstrap/js/jquery.min.js'
-        'bundles/rgoubootstrap/bootstrap/js/bootstrap.min.js'
-        'bundles/rgoubootstrap/fuelux/loader.min.js'
+        'bundles/rgoubootstrap/js/jquery-1.10.2.js'
+        'bundles/rgoubootstrap/bootstrap/js/bootstrap.js'
+        'bundles/rgoubootstrap/js/underscore.js'
+        'bundles/rgoubootstrap/bootstrap-plugins/typeahead/typeahead.js'
+        'bundles/rgoubootstrap/js/jquery.localScroll.js'
+        'bundles/rgoubootstrap/js/jquery.scrollTo.js'
         'bundles/rgoubootstrap/js/main.js'
         filter='yui_js' 
         output='js/compiled.js'
     %}
+{#
+        'bundles/rgoubootstrap/fuelux/loader.min.js'
+        <script type="text/javascript" src="{{ asset('bundles/rgoubootstrap/bootstrap-plugins/fuelux/loader.js') }}"></script>
+#}
         <script type="text/javascript" src="{{ asset_url }}"></script>
 {% endjavascripts %}
 {% endblock footer_javascripts %}     

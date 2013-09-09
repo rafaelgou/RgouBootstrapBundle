@@ -1,0 +1,60 @@
+{% extends 'RgouBootstrapBundle:Form:widgets-vertical.html.twig' %}
+
+{#####################################
+
+Blocks with specific layout details
+
+#####################################}
+
+{% block form_label %}
+{% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' control-label')|trim}) %}
+{% spaceless %}
+    {% if label is not sameas(false) %}
+        {% if not compound %}
+            {% set label_attr = label_attr|merge({'for': id}) %}
+        {% endif %}
+        {% if required %}
+            {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
+        {% endif %}
+        {% if label is empty %}
+            {% set label = name|humanize %}
+        {% endif %}
+        {% if label_attr.label_size is defined %}
+            {% set label_size = ' col-lg-' ~ label_attr.label_size ~ ' col-md-' ~ label_attr.label_size %}
+        {% else %}
+            {% set label_size = ' col-lg-2 col-md-2' %}
+        {% endif %}
+        {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ label_size)|trim}) %}
+        <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>{{ label|trans({}, translation_domain) }}</label>
+    {% endif %}
+{% endspaceless %}
+{% endblock form_label %}
+
+
+{% block form_row %}
+{% spaceless %}
+    <div class="form-group{% if errors|length > 0 %} has-error{% endif %}">
+        {{ form_label(form, label|default(null), { 'label_attr' : label_attr }) }}
+        <div class="{% if attr.size is defined %}col-lg-{{ attr.size }}{% else %}col-lg-5{% endif %}">
+            {{ form_widget(form) }}
+            {{ form_errors(form) }}
+        </div>
+    </div>
+{% endspaceless %}
+{% endblock form_row %}
+
+{% block form_start %}
+{% spaceless %}
+    {% set method = method|upper %}
+    {% if method in ["GET", "POST"] %}
+        {% set form_method = method %}
+    {% else %}
+        {% set form_method = "POST" %}
+    {% endif %}
+    {% set attr = attr|merge({'class': (attr.class|default('') ~ ' form-horizontal')|trim}) %}
+    <form method="{{ form_method|lower }}" action="{{ action }}"{% for attrname, attrvalue in attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}{% if multipart %} enctype="multipart/form-data"{% endif %}>
+    {% if form_method != method %}
+        <input type="hidden" name="_method" value="{{ method }}" />
+    {% endif %}
+{% endspaceless %}
+{% endblock form_start %}

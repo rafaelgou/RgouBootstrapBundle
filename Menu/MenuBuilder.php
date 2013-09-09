@@ -20,7 +20,7 @@ class MenuBuilder
     public function mainMenu(Request $request)
     {
         $menu = $this->factory->createItem('root');
-        $menu->setChildrenAttribute('class', 'nav pull-left');
+        $menu->setChildrenAttribute('class', 'nav navbar-nav pull-left');
 
         $menu->addChild('Language')
              ->setAttribute('dropdown', true);

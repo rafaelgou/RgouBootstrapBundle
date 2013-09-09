@@ -2,7 +2,7 @@
     <div class="pagination">
         {% set item = 'RgouBootstrapBundle:Pagination:sliding_item.html.twig' %}
 
-        <ul>
+        <ul class="pagination">
             {% include item with {name: 'first',
                     text: '«',
                     page: first is defined ? first : null,

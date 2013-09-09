@@ -1,9 +1,10 @@
 THEMES=
  
-for theme in amelia cerulean cosmo cyborg journal readable simplex slate spacelab spruce superhero united
+for theme in amelia cerulean cosmo cyborg flatly journal readable simplex slate spacelab united
 do
     mkdir ${theme}
     cd ${theme}
-    wget http://netdna.bootstrapcdn.com/bootswatch/2.3.1/${theme}/bootstrap.min.css
+    rm bootstrap.min.css bootstrap.min.css.1
+    wget http://netdna.bootstrapcdn.com/bootswatch/3.0.0/${theme}/bootstrap.min.css
     cd ../ 
 done

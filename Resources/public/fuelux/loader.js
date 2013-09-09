@@ -1,342 +1,5 @@
 (function () {
-/**
- * almond 0.1.4 Copyright (c) 2011, The Dojo Foundation All Rights Reserved.
- * Available via the MIT or new BSD license.
- * see: http://github.com/jrburke/almond for details
- */
-//Going sloppy to avoid 'use strict' string cost, but strict practices should
-//be followed.
-/*jslint sloppy: true */
-/*global setTimeout: false */
 
-var requirejs, require, define;
-(function (undef) {
-    var main, req,
-        defined = {},
-        waiting = {},
-        config = {},
-        defining = {},
-        aps = [].slice;
-
-    /**
-     * Given a relative module name, like ./something, normalize it to
-     * a real name that can be mapped to a path.
-     * @param {String} name the relative name
-     * @param {String} baseName a real name that the name arg is relative
-     * to.
-     * @returns {String} normalized name
-     */
-    function normalize(name, baseName) {
-        var nameParts, nameSegment, mapValue, foundMap,
-            foundI, foundStarMap, starI, i, j, part,
-            baseParts = baseName && baseName.split("/"),
-            map = config.map,
-            starMap = (map && map['*']) || {};
-
-        //Adjust any relative paths.
-        if (name && name.charAt(0) === ".") {
-            //If have a base name, try to normalize against it,
-            //otherwise, assume it is a top-level require that will
-            //be relative to baseUrl in the end.
-            if (baseName) {
-                //Convert baseName to array, and lop off the last part,
-                //so that . matches that "directory" and not name of the baseName's
-                //module. For instance, baseName of "one/two/three", maps to
-                //"one/two/three.js", but we want the directory, "one/two" for
-                //this normalization.
-                baseParts = baseParts.slice(0, baseParts.length - 1);
-
-                name = baseParts.concat(name.split("/"));
-
-                //start trimDots
-                for (i = 0; i < name.length; i += 1) {
-                    part = name[i];
-                    if (part === ".") {
-                        name.splice(i, 1);
-                        i -= 1;
-                    } else if (part === "..") {
-                        if (i === 1 && (name[2] === '..' || name[0] === '..')) {
-                            //End of the line. Keep at least one non-dot
-                            //path segment at the front so it can be mapped
-                            //correctly to disk. Otherwise, there is likely
-                            //no path mapping for a path starting with '..'.
-                            //This can still fail, but catches the most reasonable
-                            //uses of ..
-                            break;
-                        } else if (i > 0) {
-                            name.splice(i - 1, 2);
-                            i -= 2;
-                        }
-                    }
-                }
-                //end trimDots
-
-                name = name.join("/");
-            }
-        }
-
-        //Apply map config if available.
-        if ((baseParts || starMap) && map) {
-            nameParts = name.split('/');
-
-            for (i = nameParts.length; i > 0; i -= 1) {
-                nameSegment = nameParts.slice(0, i).join("/");
-
-                if (baseParts) {
-                    //Find the longest baseName segment match in the config.
-                    //So, do joins on the biggest to smallest lengths of baseParts.
-                    for (j = baseParts.length; j > 0; j -= 1) {
-                        mapValue = map[baseParts.slice(0, j).join('/')];
-
-                        //baseName segment has  config, find if it has one for
-                        //this name.
-                        if (mapValue) {
-                            mapValue = mapValue[nameSegment];
-                            if (mapValue) {
-                                //Match, update name to the new value.
-                                foundMap = mapValue;
-                                foundI = i;
-                                break;
-                            }
-                        }
-                    }
-                }
-
-                if (foundMap) {
-                    break;
-                }
-
-                //Check for a star map match, but just hold on to it,
-                //if there is a shorter segment match later in a matching
-                //config, then favor over this star map.
-                if (!foundStarMap && starMap && starMap[nameSegment]) {
-                    foundStarMap = starMap[nameSegment];
-                    starI = i;
-                }
-            }
-
-            if (!foundMap && foundStarMap) {
-                foundMap = foundStarMap;
-                foundI = starI;
-            }
-
-            if (foundMap) {
-                nameParts.splice(0, foundI, foundMap);
-                name = nameParts.join('/');
-            }
-        }
-
-        return name;
-    }
-
-    function makeRequire(relName, forceSync) {
-        return function () {
-            //A version of a require function that passes a moduleName
-            //value for items that may need to
-            //look up paths relative to the moduleName
-            return req.apply(undef, aps.call(arguments, 0).concat([relName, forceSync]));
-        };
-    }
-
-    function makeNormalize(relName) {
-        return function (name) {
-            return normalize(name, relName);
-        };
-    }
-
-    function makeLoad(depName) {
-        return function (value) {
-            defined[depName] = value;
-        };
-    }
-
-    function callDep(name) {
-        if (waiting.hasOwnProperty(name)) {
-            var args = waiting[name];
-            delete waiting[name];
-            defining[name] = true;
-            main.apply(undef, args);
-        }
-
-        if (!defined.hasOwnProperty(name)) {
-            throw new Error('No ' + name);
-        }
-        return defined[name];
-    }
-
-    /**
-     * Makes a name map, normalizing the name, and using a plugin
-     * for normalization if necessary. Grabs a ref to plugin
-     * too, as an optimization.
-     */
-    function makeMap(name, relName) {
-        var prefix, plugin,
-            index = name.indexOf('!');
-
-        if (index !== -1) {
-            prefix = normalize(name.slice(0, index), relName);
-            name = name.slice(index + 1);
-            plugin = callDep(prefix);
-
-            //Normalize according
-            if (plugin && plugin.normalize) {
-                name = plugin.normalize(name, makeNormalize(relName));
-            } else {
-                name = normalize(name, relName);
-            }
-        } else {
-            name = normalize(name, relName);
-        }
-
-        //Using ridiculous property names for space reasons
-        return {
-            f: prefix ? prefix + '!' + name : name, //fullName
-            n: name,
-            p: plugin
-        };
-    }
-
-    function makeConfig(name) {
-        return function () {
-            return (config && config.config && config.config[name]) || {};
-        };
-    }
-
-    main = function (name, deps, callback, relName) {
-        var cjsModule, depName, ret, map, i,
-            args = [],
-            usingExports;
-
-        //Use name if no relName
-        relName = relName || name;
-
-        //Call the callback to define the module, if necessary.
-        if (typeof callback === 'function') {
-
-            //Pull out the defined dependencies and pass the ordered
-            //values to the callback.
-            //Default to [require, exports, module] if no deps
-            deps = !deps.length && callback.length ? ['require', 'exports', 'module'] : deps;
-            for (i = 0; i < deps.length; i += 1) {
-                map = makeMap(deps[i], relName);
-                depName = map.f;
-
-                //Fast path CommonJS standard dependencies.
-                if (depName === "require") {
-                    args[i] = makeRequire(name);
-                } else if (depName === "exports") {
-                    //CommonJS module spec 1.1
-                    args[i] = defined[name] = {};
-                    usingExports = true;
-                } else if (depName === "module") {
-                    //CommonJS module spec 1.1
-                    cjsModule = args[i] = {
-                        id: name,
-                        uri: '',
-                        exports: defined[name],
-                        config: makeConfig(name)
-                    };
-                } else if (defined.hasOwnProperty(depName) || waiting.hasOwnProperty(depName)) {
-                    args[i] = callDep(depName);
-                } else if (map.p) {
-                    map.p.load(map.n, makeRequire(relName, true), makeLoad(depName), {});
-                    args[i] = defined[depName];
-                } else if (!defining[depName]) {
-                    throw new Error(name + ' missing ' + depName);
-                }
-            }
-
-            ret = callback.apply(defined[name], args);
-
-            if (name) {
-                //If setting exports via "module" is in play,
-                //favor that over return value and exports. After that,
-                //favor a non-undefined return value over exports use.
-                if (cjsModule && cjsModule.exports !== undef &&
-                        cjsModule.exports !== defined[name]) {
-                    defined[name] = cjsModule.exports;
-                } else if (ret !== undef || !usingExports) {
-                    //Use the return value from the function.
-                    defined[name] = ret;
-                }
-            }
-        } else if (name) {
-            //May just be an object definition for the module. Only
-            //worry about defining if have a module name.
-            defined[name] = callback;
-        }
-    };
-
-    requirejs = require = req = function (deps, callback, relName, forceSync, alt) {
-        if (typeof deps === "string") {
-            //Just return the module wanted. In this scenario, the
-            //deps arg is the module name, and second arg (if passed)
-            //is just the relName.
-            //Normalize module name, if it contains . or ..
-            return callDep(makeMap(deps, callback).f);
-        } else if (!deps.splice) {
-            //deps is a config object, not an array.
-            config = deps;
-            if (callback.splice) {
-                //callback is an array, which means it is a dependency list.
-                //Adjust args if there are dependencies
-                deps = callback;
-                callback = relName;
-                relName = null;
-            } else {
-                deps = undef;
-            }
-        }
-
-        //Support require(['a'])
-        callback = callback || function () {};
-
-        //If relName is a function, it is an errback handler,
-        //so remove it.
-        if (typeof relName === 'function') {
-            relName = forceSync;
-            forceSync = alt;
-        }
-
-        //Simulate async callback;
-        if (forceSync) {
-            main(undef, deps, callback, relName);
-        } else {
-            setTimeout(function () {
-                main(undef, deps, callback, relName);
-            }, 15);
-        }
-
-        return req;
-    };
-
-    /**
-     * Just drops the config on the floor, but returns req in case
-     * the config return value is used.
-     */
-    req.config = function (cfg) {
-        config = cfg;
-        return req;
-    };
-
-    define = function (name, deps, callback) {
-
-        //This module may not have dependencies
-        if (!deps.splice) {
-            //deps is not an array, so probably means
-            //an object literal or factory function for
-            //the value. Adjust args.
-            callback = deps;
-            deps = [];
-        }
-
-        waiting[name] = [name, deps, callback];
-    };
-
-    define.amd = {
-        jQuery: true
-    };
-}());
 
 define("almond", function(){});
 
@@ -344,7 +7,7 @@ define("almond", function(){});
 (function (root) { var amdExports; define('bootstrap/bootstrap-transition',['jquery'], function () { (function () {
 
 /* ===================================================
- * bootstrap-transition.js v2.3.0
+ * bootstrap-transition.js v2.3.2
  * http://twitter.github.com/bootstrap/javascript.html#transitions
  * ===================================================
  * Copyright 2012 Twitter, Inc.
@@ -413,7 +76,7 @@ define("almond", function(){});
 (function (root) { var amdExports; define('bootstrap/bootstrap-affix',['bootstrap/bootstrap-transition'], function () { (function () {
 
 /* ==========================================================
- * bootstrap-affix.js v2.3.0
+ * bootstrap-affix.js v2.3.2
  * http://twitter.github.com/bootstrap/javascript.html#affix
  * ==========================================================
  * Copyright 2012 Twitter, Inc.
@@ -539,7 +202,7 @@ define("almond", function(){});
 (function (root) { var amdExports; define('bootstrap/bootstrap-alert',['bootstrap/bootstrap-transition'], function () { (function () {
 
 /* ==========================================================
- * bootstrap-alert.js v2.3.0
+ * bootstrap-alert.js v2.3.2
  * http://twitter.github.com/bootstrap/javascript.html#alerts
  * ==========================================================
  * Copyright 2012 Twitter, Inc.
@@ -647,7 +310,7 @@ define("almond", function(){});
 (function (root) { var amdExports; define('bootstrap/bootstrap-button',['bootstrap/bootstrap-transition'], function () { (function () {
 
 /* ============================================================
- * bootstrap-button.js v2.3.0
+ * bootstrap-button.js v2.3.2
  * http://twitter.github.com/bootstrap/javascript.html#buttons
  * ============================================================
  * Copyright 2012 Twitter, Inc.
@@ -761,7 +424,7 @@ define("almond", function(){});
 (function (root) { var amdExports; define('bootstrap/bootstrap-carousel',['bootstrap/bootstrap-transition'], function () { (function () {
 
 /* ==========================================================
- * bootstrap-carousel.js v2.3.0
+ * bootstrap-carousel.js v2.3.2
  * http://twitter.github.com/bootstrap/javascript.html#carousel
  * ==========================================================
  * Copyright 2012 Twitter, Inc.
@@ -837,7 +500,7 @@ define("almond", function(){});
       if (!e) this.paused = true
       if (this.$element.find('.next, .prev').length && $.support.transition.end) {
         this.$element.trigger($.support.transition.end)
-        this.cycle()
+        this.cycle(true)
       }
       clearInterval(this.interval)
       this.interval = null
@@ -977,7 +640,7 @@ define("almond", function(){});
 (function (root) { var amdExports; define('bootstrap/bootstrap-collapse',['bootstrap/bootstrap-transition'], function () { (function () {
 
 /* =============================================================
- * bootstrap-collapse.js v2.3.0
+ * bootstrap-collapse.js v2.3.2
  * http://twitter.github.com/bootstrap/javascript.html#collapse
  * =============================================================
  * Copyright 2012 Twitter, Inc.
@@ -1153,7 +816,7 @@ define("almond", function(){});
 (function (root) { var amdExports; define('bootstrap/bootstrap-dropdown',['bootstrap/bootstrap-transition'], function () { (function () {
 
 /* ============================================================
- * bootstrap-dropdown.js v2.3.0
+ * bootstrap-dropdown.js v2.3.2
  * http://twitter.github.com/bootstrap/javascript.html#dropdowns
  * ============================================================
  * Copyright 2012 Twitter, Inc.
@@ -1206,6 +869,10 @@ define("almond", function(){});
       clearMenus()
 
       if (!isActive) {
+        if ('ontouchstart' in document.documentElement) {
+          // if mobile we we use a backdrop because click events don't delegate
+          $('<div class="dropdown-backdrop"/>').insertBefore($(this)).on('click', clearMenus)
+        }
         $parent.toggleClass('open')
       }
 
@@ -1258,6 +925,7 @@ define("almond", function(){});
   }
 
   function clearMenus() {
+    $('.dropdown-backdrop').remove()
     $(toggle).each(function () {
       getParent($(this)).removeClass('open')
     })
@@ -1312,7 +980,6 @@ define("almond", function(){});
   $(document)
     .on('click.dropdown.data-api', clearMenus)
     .on('click.dropdown.data-api', '.dropdown form', function (e) { e.stopPropagation() })
-    .on('.dropdown-menu', function (e) { e.stopPropagation() })
     .on('click.dropdown.data-api'  , toggle, Dropdown.prototype.toggle)
     .on('keydown.dropdown.data-api', toggle + ', [role=menu]' , Dropdown.prototype.keydown)
 
@@ -1328,7 +995,7 @@ define("almond", function(){});
 (function (root) { var amdExports; define('bootstrap/bootstrap-modal',['bootstrap/bootstrap-transition'], function () { (function () {
 
 /* =========================================================
- * bootstrap-modal.js v2.3.0
+ * bootstrap-modal.js v2.3.2
  * http://twitter.github.com/bootstrap/javascript.html#modals
  * =========================================================
  * Copyright 2012 Twitter, Inc.
@@ -1477,7 +1144,7 @@ define("almond", function(){});
       }
 
     , removeBackdrop: function () {
-        this.$backdrop.remove()
+        this.$backdrop && this.$backdrop.remove()
         this.$backdrop = null
       }
 
@@ -1585,7 +1252,7 @@ define("almond", function(){});
 (function (root) { var amdExports; define('bootstrap/bootstrap-tooltip',['bootstrap/bootstrap-transition'], function () { (function () {
 
 /* ===========================================================
- * bootstrap-tooltip.js v2.3.0
+ * bootstrap-tooltip.js v2.3.2
  * http://twitter.github.com/bootstrap/javascript.html#tooltips
  * Inspired by the original jQuery.tipsy by Jason Frame
  * ===========================================================
@@ -1666,7 +1333,15 @@ define("almond", function(){});
     }
 
   , enter: function (e) {
-      var self = $(e.currentTarget)[this.type](this._options).data(this.type)
+      var defaults = $.fn[this.type].defaults
+        , options = {}
+        , self
+
+      this._options && $.each(this._options, function (key, value) {
+        if (defaults[key] != value) options[key] = value
+      })
+
+      self = $(e.currentTarget)[this.type](options).data(this.type)
 
       if (!self.options.delay || !self.options.delay.show) return self.show()
 
@@ -1948,7 +1623,7 @@ define("almond", function(){});
 (function (root) { var amdExports; define('bootstrap/bootstrap-popover',['bootstrap/bootstrap-transition','bootstrap/bootstrap-tooltip'], function () { (function () {
 
 /* ===========================================================
- * bootstrap-popover.js v2.3.0
+ * bootstrap-popover.js v2.3.2
  * http://twitter.github.com/bootstrap/javascript.html#popovers
  * ===========================================================
  * Copyright 2012 Twitter, Inc.
@@ -2072,7 +1747,7 @@ define("almond", function(){});
 (function (root) { var amdExports; define('bootstrap/bootstrap-scrollspy',['bootstrap/bootstrap-transition'], function () { (function () {
 
 /* =============================================================
- * bootstrap-scrollspy.js v2.3.0
+ * bootstrap-scrollspy.js v2.3.2
  * http://twitter.github.com/bootstrap/javascript.html#scrollspy
  * =============================================================
  * Copyright 2012 Twitter, Inc.
@@ -2243,7 +1918,7 @@ define("almond", function(){});
 (function (root) { var amdExports; define('bootstrap/bootstrap-tab',['bootstrap/bootstrap-transition'], function () { (function () {
 
 /* ========================================================
- * bootstrap-tab.js v2.3.0
+ * bootstrap-tab.js v2.3.2
  * http://twitter.github.com/bootstrap/javascript.html#tabs
  * ========================================================
  * Copyright 2012 Twitter, Inc.
@@ -2396,7 +2071,7 @@ define("almond", function(){});
 (function (root) { var amdExports; define('bootstrap/bootstrap-typeahead',['bootstrap/bootstrap-transition'], function () { (function () {
 
 /* =============================================================
- * bootstrap-typeahead.js v2.3.0
+ * bootstrap-typeahead.js v2.3.2
  * http://twitter.github.com/bootstrap/javascript.html#typeahead
  * =============================================================
  * Copyright 2012 Twitter, Inc.
@@ -2927,7 +2602,7 @@ define('fuelux/combobox',['require','jquery','./util'],function (require) {
 		},
 
 		selectByValue: function (value) {
-			var selector = 'li[data-value=' + value + ']';
+			var selector = 'li[data-value="' + value + '"]';
 			this.selectBySelector(selector);
 		},
 
@@ -3066,6 +2741,9 @@ define('fuelux/datagrid',['require','jquery'],function(require) {
 
 	var $ = require('jquery');
 
+	// Relates to thead .sorted styles in datagrid.less
+	var SORTED_HEADER_OFFSET = 22;
+
 
 	// DATAGRID CONSTRUCTOR AND PROTOTYPE
 
@@ -3076,7 +2754,7 @@ define('fuelux/datagrid',['require','jquery'],function(require) {
 		this.$footer = this.$element.find('tfoot th');
 		this.$footerchildren = this.$footer.children().show().css('visibility', 'hidden');
 		this.$topheader = this.$element.find('thead th');
-		this.$searchcontrol = this.$element.find('.search');
+		this.$searchcontrol = this.$element.find('.datagrid-search');
 		this.$filtercontrol = this.$element.find('.filter');
 		this.$pagesize = this.$element.find('.grid-pagesize');
 		this.$pageinput = this.$element.find('.grid-pager input');
@@ -3093,10 +2771,16 @@ define('fuelux/datagrid',['require','jquery'],function(require) {
 
 		this.options = $.extend(true, {}, $.fn.datagrid.defaults, options);
 
-		if(this.$pagesize.hasClass('select')) {
+		// Shim until v3 -- account for FuelUX select or native select for page size:
+		if (this.$pagesize.hasClass('select')) {
 			this.options.dataOptions.pageSize = parseInt(this.$pagesize.select('selectedItem').value, 10);
 		} else {
 			this.options.dataOptions.pageSize = parseInt(this.$pagesize.val(), 10);
+		}
+
+		// Shim until v3 -- account for older search class:
+		if (this.$searchcontrol.length <= 0) {
+			this.$searchcontrol = this.$element.find('.search');
 		}
 
 		this.columns = this.options.dataSource.columns();
@@ -3144,10 +2828,18 @@ define('fuelux/datagrid',['require','jquery'],function(require) {
 		},
 
 		updateColumns: function ($target, direction) {
+			this._updateColumns(this.$colheader, $target, direction);
+
+			if (this.$sizingHeader) {
+				this._updateColumns(this.$sizingHeader, this.$sizingHeader.find('th').eq($target.index()), direction);
+			}
+		},
+
+		_updateColumns: function ($header, $target, direction) {
 			var className = (direction === 'asc') ? 'icon-chevron-up' : 'icon-chevron-down';
-			this.$colheader.find('i').remove();
-			this.$colheader.find('th').removeClass('sorted');
-			$('<i>').addClass(className).appendTo($target);
+			$header.find('i.datagrid-sort').remove();
+			$header.find('th').removeClass('sorted');
+			$('<i>').addClass(className + ' datagrid-sort').appendTo($target);
 			$target.addClass('sorted');
 		},
 
@@ -3252,7 +2944,13 @@ define('fuelux/datagrid',['require','jquery'],function(require) {
 		},
 
 		pageChanged: function (e) {
-			this.options.dataOptions.pageIndex = parseInt($(e.target).val(), 10) - 1;
+			var pageRequested = parseInt($(e.target).val(), 10);
+			pageRequested = (isNaN(pageRequested)) ? 1 : pageRequested;
+			var maxPages = this.$pageslabel.text();
+		
+			this.options.dataOptions.pageIndex = 
+				(pageRequested > maxPages) ? maxPages - 1 : pageRequested - 1;
+
 			this.renderData();
 		},
 
@@ -3264,15 +2962,20 @@ define('fuelux/datagrid',['require','jquery'],function(require) {
 
 		filterChanged: function (e, filter) {
 			this.options.dataOptions.filter = filter;
+			this.options.dataOptions.pageIndex = 0;
 			this.renderData();
 		},
 
 		previous: function () {
+			this.$nextpagebtn.attr('disabled', 'disabled');
+			this.$prevpagebtn.attr('disabled', 'disabled');
 			this.options.dataOptions.pageIndex--;
 			this.renderData();
 		},
 
 		next: function () {
+			this.$nextpagebtn.attr('disabled', 'disabled');
+			this.$prevpagebtn.attr('disabled', 'disabled');
 			this.options.dataOptions.pageIndex++;
 			this.renderData();
 		},
@@ -3324,7 +3027,15 @@ define('fuelux/datagrid',['require','jquery'],function(require) {
 
 			function matchSizingCellWidth(i, el) {
 				if (i === columnCount - 1) return;
-				$(el).width($sizingCells.eq(i).width());
+
+				var $el = $(el);
+				var $sourceCell = $sizingCells.eq(i);
+				var width = $sourceCell.width();
+
+				// TD needs extra width to match sorted column header
+				if ($sourceCell.hasClass('sorted') && $el.prop('tagName') === 'TD') width = width + SORTED_HEADER_OFFSET;
+
+				$el.width(width);
 			}
 
 			this.$colheader.find('th').each(matchSizingCellWidth);
@@ -3804,7 +3515,8 @@ define('fuelux/spinner',['require','jquery'],function(require) {
 		},
 
 		value: function (value) {
-			if (typeof value !== 'undefined') {
+			if (!isNaN(parseFloat(value)) && isFinite(value)) {
+				value = parseFloat(value);
 				this.options.value = value;
 				this.$input.val(value);
 				return this;
@@ -3868,6 +3580,7 @@ define('fuelux/spinner',['require','jquery'],function(require) {
 	});
 
 });
+
 /*
  * Fuel UX Select
  * https://github.com/ExactTarget/fuelux
@@ -3952,7 +3665,7 @@ define('fuelux/select',['require','jquery','./util'],function(require) {
         },
 
         selectByValue: function(value) {
-            var selector = 'li[data-value=' + value + ']';
+            var selector = 'li[data-value="' + value + '"]';
             this.selectBySelector(selector);
         },
 
@@ -4229,7 +3942,7 @@ define('fuelux/wizard',['require','jquery'],function (require) {
 		this.$element = $(element);
 		this.options = $.extend({}, $.fn.wizard.defaults, options);
 		this.currentStep = 1;
-		this.numSteps = this.$element.find('li').length;
+		this.numSteps = this.$element.find('.steps li').length;
 		this.$prevBtn = this.$element.find('button.btn-prev');
 		this.$nextBtn = this.$element.find('button.btn-next');
 

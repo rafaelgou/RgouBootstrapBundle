@@ -3,8 +3,7 @@
 
 {% block head_stylesheets %}
     {% stylesheets
-    'bundles/rgoubootstrap/bootstrap/css/bootstrap-combined.no-icons.min.css'
-    'bundles/rgoubootstrap/bootstrap/css/bootstrap-responsive.min.css'
+    'bundles/rgoubootstrap/bootstrap/css/bootstrap.min.css'
     'bundles/rgoubootstrap/font-awesome/css/font-awesome.min.css'
     'bundles/rgoubootstrap/css/main.css'
     output='css/compiled-demo.css'
@@ -47,10 +46,10 @@
     
 {% block footer_javascripts %}
     {% javascripts
-        'bundles/rgoubootstrap/js/jquery.min.js'
+        'bundles/rgoubootstrap/js/jquery-1.10.2.min.js'
         'bundles/rgoubootstrap/bootstrap/js/bootstrap.min.js'
         filter='yui_js' 
-        output='js/compiled.js'
+        output='js/compiled-demo.js'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
 {% endjavascripts %}

@@ -1,21 +1,14 @@
-{# Container class definition
-   --------------------------
-   Twitter Bootstrap container class can be 'container' or 'container-fluid'
-   You can overwride in your layouts
-   use 
-
-    <div class="{{ container_class }}">
-
-   whatever you need to be consistent with the main container
-   (such as navbars and footer)  
-    
-#}
-{% if container_class is null %}{% set container_class = 'container-fluid' %}{% endif %}
-
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8" />
+
+    {# Title
+       -----
+       Use this block to set the page title
+    #}
+    <title>{% block title %}Rgou Bootstrap Bundle{% endblock title %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     {# Main Stylesheets
        ----------------
@@ -24,15 +17,12 @@
     #}
     {% block head_stylesheets %}{% endblock head_stylesheets %}
     
-    
     {# Additional Stylesheets
        ----------------------
        Use this block anywhere in templates to add additional stylesheets
        without overwriding  global stylesheets
     #}
     {% block stylesheets %}{% endblock stylesheets %}
-    
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     {# Additional Javascripts on head 
        ------------------------------
@@ -42,11 +32,6 @@
     #}
     {% block head_javascripts %}{% endblock head_javascripts %}
     
-    {# Title
-       -----
-       Use this block to set the page title
-    #}
-    <title>{% block title %}Rgou Bootstrap Bundle{% endblock title %}</title>
     
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
     
@@ -100,7 +85,7 @@
     #}
     {% block container %}
         
-    <div class="{{ container_class }}">
+    <div class="container">
 
         <div class="content">
 

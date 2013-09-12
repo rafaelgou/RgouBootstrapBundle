@@ -115,7 +115,7 @@
             {% for type in types %}
                 {% for flashMessage in app.session.flashbag.get(type) %}
                 <div class="alert alert-{{ type }}">
-                    <p>{{ flashMessage | trans({}, 'rgou_bootstrap') }}</p>
+                    <p>{{ flashMessage | trans({}, 'rgou_bootstrap') | raw}}</p>
                 </div>
                 {% endfor %}
             {% endfor %}            

@@ -8,8 +8,15 @@
        Use this block to set the page title
     #}
     <title>{% block title %}Rgou Bootstrap Bundle{% endblock title %}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    {# Metatags
+       --------
+       Use these blocks to set the viewport, description and keywords
+    #}
+    <meta name="viewport" content="{% block meta_viewport %}width=device-width, initial-scale=1.0{% endblock meta_viewport %}">
+    <meta name="description" content="{% block meta_description %}change,me,block,meta_description{% endblock meta_description %}" />
+    <meta name="keywords" content="{% block meta_keywords %}change,me,block,meta_keywords{% endblock meta_keywords %}" />
+    
     {# Main Stylesheets
        ----------------
        Use this block in Layouts to set global stylesheets
@@ -31,9 +38,13 @@
        for better loading performance
     #}
     {% block head_javascripts %}{% endblock head_javascripts %}
-    
-    
-    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
+
+
+    {# Favicon
+       --------
+       Use this block to set the favicon
+    #}
+    <link rel="shortcut icon" href="{% block favicon %}{{ asset('favicon.ico') }}{% endblock favicon %}" />
     
     {# Extra Head
        ----------
@@ -49,7 +60,6 @@
 #}
 {% block body %}
 
-
 {# Body Attributes
    ---------------
    Useful for javascripts or class overwrides, but preferably use
@@ -60,28 +70,51 @@
     {# Top Navigation Bar
        ------------------
        Use a "navbar navbar-fixed-top" to be fix on top
-       <div class="navbar navbar-fixed-top">
-           <div class="{{ container_class }}">
-           (...)
-           </div>
-       </div>
+       and navbar-default / navbar-inverse / none for color patterns
+       <header class="navbar navbar-default navbar-fixed-top">
+       </header>
     #}
-    {% block navbar_top %}{% endblock navbar_top %}
+    {% block navbar_top %}
+    <header class="navbar navbar-default navbar-fixed-top" role="banner">
+        <div class="container">
+            <div class="navbar-header">
+                <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                {% block navbar_top_brand %}
+                <a class="navbar-brand" href="/">Your Brand</a>
+                {% endblock navbar_top_brand %}
+            </div>
+
+            <nav class="collapse navbar-collapse bs-navbar-collapse navbar-right top-spy" role="navigation">
+                {% block navbar_top_content %}
+                <ul>
+                    <li><a href="">Sample Menu Item 1</a></li>
+                    <li><a href="">Sample Menu Item 2</a></li>
+                </ul>
+                {% endblock navbar_top_content %}
+            </nav>
+
+        </div>
+    </header>
+    {% endblock navbar_top %}
     
     {# Bottom Navigation Bar
        ---------------------
-       Use a "navbar navbar-fixed-bottom" to be fix on bottom
-       <div class="navbar navbar-fixed-bottom">
-           <div class="{{ container_class }}">
-           (...)
-           </div>
+       DEFAULT: EMPTY
+       Use a "navbar navbar-fixed-bottom" to be fix on top
+       and navbar-default / navbar-inverse / none for color patterns
+       <div class="navbar navbar-default navbar-fixed-bottom">
        </div>
     #}
     {% block navbar_bottom %}{% endblock navbar_bottom %}
     
     {# Main Container 
        --------------
-       Use this block to overwride all containers but navbars
+       Use this block to overwride all containers but navbars and footer
     #}
     {% block container %}
         
@@ -115,7 +148,7 @@
             {% for type in types %}
                 {% for flashMessage in app.session.flashbag.get(type) %}
                 <div class="alert alert-{{ type }}">
-                    <p>{{ flashMessage | trans({}, 'rgou_bootstrap') | raw}}</p>
+                    <p>{{ flashMessage | trans({}, 'rgoubootstrap') | raw}}</p>
                 </div>
                 {% endfor %}
             {% endfor %}            
@@ -140,7 +173,7 @@
     #}
     {% block footer %}
     <footer class="footer">
-        <div class="{{ container_class }}">
+        <div class="container">
         {# Footer Content
            --------------
             Only the footer content to be over overwride
@@ -167,6 +200,7 @@
        --------------------------------
        Use this block in templates for inline or include javascripts
        needed only on that context
+       SPECIALLY use this for jQuery.ready content
     #}
     {% block javascripts %}{% endblock javascripts %}
     

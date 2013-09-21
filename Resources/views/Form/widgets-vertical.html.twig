@@ -19,7 +19,7 @@
 {% block choice_widget_expanded %}
 {% spaceless %}
     {% for child in form %}
-        <label class="{{ multiple ? 'checkbox' : 'radio' }}">
+        <label class="{{ multiple ? 'checkbox' : 'radio' }}{% if attr.inline is defined and attr.inline %} {{ multiple ? 'checkbox' : 'radio' }}-inline{% endif %}">
             {{ form_widget(child) }}
             {{ child.vars.label|trans({}, translation_domain) }}
         </label>
@@ -120,3 +120,9 @@ Blocks with specific layout details
     {% endif %}
 {% endspaceless %}
 {% endblock form_start %}
+
+{% block textarea_widget %}
+{% spaceless %}
+    <textarea class="form-control" {{ block('widget_attributes') }}>{{ value }}</textarea>
+{% endspaceless %}
+{% endblock textarea_widget %}

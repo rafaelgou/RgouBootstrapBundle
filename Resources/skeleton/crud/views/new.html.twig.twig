@@ -2,16 +2,27 @@
 
 {{ "{% extends '" ~ rgou_bootstrap.template ~ "' %}" }}
 
-{{ '{% block headline %}' }}{{ "{{ '" ~ entity ~ "' }} {{ 'new'|trans({},'rgoubootstrap') }}" }}{{ '{% endblock headline %}' }}
+{{ "{% block headline %}" }}
+{{ "{{ 'New'|trans({},'rgoubootstrap') }}" }} {{ "{{ '" ~ entity ~ "'|trans({},'rgoubootstrap') }}" }}
+<small> {{ "{{ 'or'|trans({},'rgoubootstrap') }}" }}
+    <a title="{{ "{{ 'Back to the list'|trans({},'rgoubootstrap') }}" }}" class="btn btn-default btn-default btn-xs" href="{{ "{{ path('"~ route_name_prefix ~"') }}" }}">
+       <i class="icon-th-list icon-white"></i> {{ "{{ 'Back to the list'|trans({},'rgoubootstrap') }}" }}
+    </a>
+</small>
+{{ '{% endblock headline %}' }}
 
 {{ "{% block content %}" }}
 
 <form class="form-horizontal" action="{{ "{{ path('"~ route_name_prefix ~"_create') }}" }}" method="post" {{ "{{ form_enctype(form) }}" }}>
+{{ "{{ form_start(form, {'action': path('"~ route_name_prefix ~"_create'), 'method': 'POST', 'id': 'form_user_edit', 'attr': {'class': 'form=horizontal' } }) }}"}}
+
     {{ "{{ form_widget(form) }}" }}
 
+<hr/>
 {% set hide_edit, hide_save, hide_save_add, hide_delete = true, false, false, true %}
 {% include 'views/others/record_actions.html.twig.twig' %}
+<hr/>
 
-</form>
+{{ "{{ form_end(form) }}" }}
 
 {{ "{% endblock %}" }}

@@ -1,9 +1,9 @@
 {{ "{% extends '" ~ rgou_bootstrap.template ~ "' %}" }}
 
 {{ "{% block headline %}" }}
-{{ "{{ 'Show'|trans({},'rgoubootstrap') }} {{ '" ~ entity ~ "' }}" }}
+{{ "{{ 'Show'|trans({},'rgoubootstrap') }}" }} {{ "{{ '" ~ entity ~ "'|trans({},'rgoubootstrap') }}" }}
 <small> {{ "{{ 'or'|trans({},'rgoubootstrap') }}" }}
-    <a title="{{ "{{ 'Back to the list'|trans({},'rgoubootstrap') }}" }}" class="btn btn-default btn-default btn-sm" href="{{ "{{ path('"~ route_name_prefix ~"') }}" }}">
+    <a title="{{ "{{ 'Back to the list'|trans({},'rgoubootstrap') }}" }}" class="btn btn-default btn-default btn-xs" href="{{ "{{ path('"~ route_name_prefix ~"') }}" }}">
        <i class="icon-th-list icon-white"></i> {{ "{{ 'Back to the list'|trans({},'rgoubootstrap') }}" }}
     </a>
 </small>
@@ -47,11 +47,13 @@
     </tbody>
 </table>
 
+<hr/>
 {% set hide_edit, hide_save, hide_save_add, hide_delete = false, true, true, false %}
 {% include 'views/others/record_actions.html.twig.twig' %}
 {% if ('delete' in actions) and (not hide_delete) %}
 {% include 'views/others/delete_form.html.twig.twig' %}
 {% endif %}
+<hr/>
 
 {{ "{% endblock %}" }}
 

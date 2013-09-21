@@ -1,10 +1,15 @@
 $(function(){
 
     /**
-     *  localScroller activate on header
+     * localScroller activate on header
      */
     $('header').localScroll(3000);
 
+
+    /**
+     * Chosen activate
+     */
+    $('.chosen').chosen();
     /**
      * Underscore extension for Twitter Bootstrap TypeAhead
      */

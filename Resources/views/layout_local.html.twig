@@ -2,8 +2,9 @@
 
 {% block head_stylesheets %}
     {% stylesheets
-    'bundles/rgoubootstrap/bootstrap/css/bootstrap.min.css'
+    'bundles/rgoubootstrap/bootstrap/css/bootstrap-theme.min.css'
     'bundles/rgoubootstrap/font-awesome/css/font-awesome.min.css'
+    'bundles/rgoubootstrap/chosen/chosen.css'
     'bundles/rgoubootstrap/css/main.css'
     output='css/compiled.css'
     filter='cssrewrite' 
@@ -21,32 +22,15 @@
 {# Additional Javascripts on head #}
 {% endblock head_javascripts %}
 
-{# Top Navigation Bar #}
-{% block navbar_top %}
-<div class="navbar navbar-fixed-top">
-    <div class="navbar-inner">
-        <div class="{{ container_class }}">
-            
-            <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
-            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </a>            
-            
+{% block navbar_top_brand %}
             <a class="brand" href="#">Rgou</a>
-            
-            <!-- Everything you want hidden at 940px or less, place within here -->
-            <div class="nav-collapse collapse">
-                {{ knp_menu_render('samplemain') }}
-                {{ knp_menu_render('sampleuser') }}
-            </div>            
-            
-        </div>
-    </div>
-</div> 
-{% endblock navbar_top %}
+{% endblock navbar_top_brand %}
 
+{% block navbar_top_content %}
+{{ knp_menu_render('samplemain') }}
+{{ knp_menu_render('sampleuser') }}
+{% endblock navbar_top_content %}
+            
 {% block footer_javascripts %}
     {% javascripts
         'bundles/rgoubootstrap/js/jquery-1.10.2.js'
@@ -55,6 +39,7 @@
         'bundles/rgoubootstrap/bootstrap-plugins/typeahead/typeahead.js'
         'bundles/rgoubootstrap/js/jquery.localScroll.js'
         'bundles/rgoubootstrap/js/jquery.scrollTo.js'
+        'bundles/rgoubootstrap/chosen/chosen.jquery.js'
         'bundles/rgoubootstrap/js/main.js'
         filter='yui_js' 
         output='js/compiled.js'

@@ -3,9 +3,9 @@
 {{ "{% extends '" ~ rgou_bootstrap.template ~ "' %}" }}
 
 {{ "{% block headline %}" }}
-{{ "{{ '" ~ entity ~ "' }} {{ 'edit'|trans({},'rgoubootstrap') }}" }}
+{{ "{{ 'Edit'|trans({},'rgoubootstrap') }}" }} {{ "{{ '" ~ entity ~ "'|trans({},'rgoubootstrap') }}" }}
 <small> {{ "{{ 'or'|trans({},'rgoubootstrap') }}" }}
-    <a title="{{ "{{ 'Back to the list'|trans({},'rgoubootstrap') }}" }}" class="btn btn-default btn-default btn-sm" href="{{ "{{ path('"~ route_name_prefix ~"') }}" }}">
+    <a title="{{ "{{ 'Back to the list'|trans({},'rgoubootstrap') }}" }}" class="btn btn-default btn-default btn-xs" href="{{ "{{ path('"~ route_name_prefix ~"') }}" }}">
        <i class="icon-th-list icon-white"></i> {{ "{{ 'Back to the list'|trans({},'rgoubootstrap') }}" }}
     </a>
 </small>
@@ -13,18 +13,19 @@
 
 {{ "{% block content %}" }}
 
-<form class="form-horizontal" action="{{ "{{ path('"~ route_name_prefix ~"_update', { 'id': record.id }) }}" }}" method="post" {{ "{{ form_enctype(edit_form) }}" }}>
+{{ "{{ form_start(edit_form, {'action': path('"~ route_name_prefix ~"_update', { 'id': record.id }), 'method': 'POST', 'id': 'form_user_edit', 'attr': {'class': 'form=horizontal' } }) }}"}}
 
     {{ "{{ form_widget(edit_form) }}" }}
     
-
+<hr/>
 {% set hide_edit, hide_save, hide_save_add, hide_delete = true, false, true, false %}
 {% include 'views/others/record_actions.html.twig.twig' %}
 {% if ('delete' in actions) and (not hide_delete) %}
 {% include 'views/others/delete_form.html.twig.twig' %}
 {% endif %}
+<hr/>
 
-</form>
+{{ "{{ form_end(edit_form) }}" }}
 
 {{ "{% endblock %}" }}
 

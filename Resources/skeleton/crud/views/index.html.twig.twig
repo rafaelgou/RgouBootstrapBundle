@@ -6,7 +6,7 @@
     <small> 
         {{ "({% transchoice pagination.totalItemCount with {'%count%': pagination.totalItemCount} from 'rgoubootstrap' %}{0}no records|{1}1 record|]1,Inf]%count% records{% endtranschoice %}" }})
         {{ "{{ 'or'|trans({},'rgoubootstrap') }}" }}
-        <a title="{{ "{{ 'New'|trans({},'rgoubootstrap') }}" }}" class="btn btn-default btn-default btn-sm" href="{{ "{{ path('"~ route_name_prefix ~"_new') }}" }}">
+        <a title="{{ "{{ 'New'|trans({},'rgoubootstrap') }}" }}" class="btn btn-default btn-default btn-xs" href="{{ "{{ path('"~ route_name_prefix ~"_new') }}" }}">
         <i class="icon-plus icon-white"></i> {{ "{{ 'New'|trans({},'rgoubootstrap') }}" }}
         </a>
     </small>

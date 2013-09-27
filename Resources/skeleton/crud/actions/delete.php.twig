@@ -22,12 +22,19 @@
                 throw $this->createNotFoundException('Unable to find {{ entity }} entity.');
             }
 
-            $em->remove($record);
-            $em->flush();
-            $this->get('session')->getFlashBag()->add(
-                'success',
-                'The record was successfully deleted.'
-            );
+            try {
+                $em->remove($record);
+                $em->flush();
+                $this->get('session')->getFlashBag()->add(
+                    'success',
+                    'The record was successfully deleted.'
+                );
+            } catch (\Exception $exc) {
+                $this->get('session')->getFlashBag()->add(
+                    'error',
+                    'There is an error deleting the record. Check if the record has relationships.'
+                );
+            }
 
         } else {
 

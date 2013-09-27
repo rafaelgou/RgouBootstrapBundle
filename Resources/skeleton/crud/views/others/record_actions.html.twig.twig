@@ -25,7 +25,7 @@
 {% endif %}
         
 {% if ('delete' in actions) and (not hide_delete) %}
-    <button id="delete_record" class="btn btn-danger" type="button">
+    <button type="button" data-toggle="modal" data-target="#delete_modal" class="btn btn-danger">
         <i class="icon-trash"></i>
         {{ "{{ 'Delete'|trans({},'rgoubootstrap') }}" }}
     </button>

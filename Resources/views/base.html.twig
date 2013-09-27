@@ -8,7 +8,6 @@
        Use this block to set the page title
     #}
     <title>{% block title %}Rgou Bootstrap Bundle{% endblock title %}</title>
-
     {# Metatags
        --------
        Use these blocks to set the viewport, description and keywords
@@ -147,6 +146,7 @@
             {% set types = ['notice','error','success','info'] %}
             {% for type in types %}
                 {% for flashMessage in app.session.flashbag.get(type) %}
+                {% if type == 'error' %}{% set type = 'danger' %}{% endif %}
                 <div class="alert alert-{{ type }}">
                     <p>{{ flashMessage | trans({}, 'rgoubootstrap') | raw}}</p>
                 </div>

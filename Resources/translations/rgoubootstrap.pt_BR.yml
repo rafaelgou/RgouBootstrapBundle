@@ -30,6 +30,7 @@ Clear Filters: Limpar Filtros
 'The record was successfully updated.': 'O registro foi atualizado com sucesso.'
 'There is an error in the form. Check below.': 'Ocorreu um erro no formulário. Verifique abaixo.'
 'The record was successfully deleted.': 'O registro foi excluído com sucesso.'
-'There is an error on deleting the record.': 'Ocorreu um erro ao excluir o registro.'
+'There is an error deleting the record.': 'Ocorreu um erro ao excluir o registro.'
+'There is an error deleting the record. Check if the record has relationships.': 'Ocorreu um erro ao excluir o registro. Verifique se o registro tem relações.'
 'The record was successfully created.': 'O registro foi criado com sucesso.'
 'The record was successfully created. Create another below.': 'O registro foi criado com sucesso. Crie um novo baixo'

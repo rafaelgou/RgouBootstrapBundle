@@ -3,7 +3,7 @@
 {{ "{% extends '" ~ rgou_bootstrap.template ~ "' %}" }}
 
 {{ "{% block headline %}" }}
-{{ "{{ 'New'|trans({},'rgoubootstrap') }}" }} {{ "{{ '" ~ entity ~ "'|trans({},'rgoubootstrap') }}" }}
+{{ "{{ 'New'|trans({},'rgoubootstrap') }}" }} {{ entity }}
 <small> {{ "{{ 'or'|trans({},'rgoubootstrap') }}" }}
     <a title="{{ "{{ 'Back to the list'|trans({},'rgoubootstrap') }}" }}" class="btn btn-default btn-default btn-xs" href="{{ "{{ path('"~ route_name_prefix ~"') }}" }}">
        <i class="icon-th-list icon-white"></i> {{ "{{ 'Back to the list'|trans({},'rgoubootstrap') }}" }}

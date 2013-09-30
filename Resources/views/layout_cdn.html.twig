@@ -3,14 +3,10 @@
 {% block head_stylesheets %}
         <link href="{% block main_boostrap_css %}//netdna.bootstrapcdn.com/twitter-bootstrap/3.0.0/css/bootstrap-combined.no-icons.min.css{% endblock main_boostrap_css %}" type="text/css" rel="stylesheet" media="screen" />
         <link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css" type="text/css" rel="stylesheet" media="screen" />
-{#
-        <link href="//fuelcdn.com/fuelux/2.3.1/css/fuelux.css" type="text/css" rel="stylesheet" media="screen" />
-        <link href="//fuelcdn.com/fuelux/2.3.1/css/fuelux-responsive.css" type="text/css" rel="stylesheet" media="screen" />
-#}
     {% stylesheets
     'bundles/rgoubootstrap/chosen/chosen.css'
     'bundles/rgoubootstrap/css/main.css'
-    output='css/compiled.css'
+    output='css/compiled-cdn.css'
     filter='cssrewrite'
     filter='yui_css'
     %}
@@ -23,7 +19,7 @@
 {% endblock head_javascripts %}
 
 {% block navbar_top_brand %}
-            <a class="brand" href="#">Rgou</a>
+            <a class="navbar-brand" href="#">Rgou</a>
 {% endblock navbar_top_brand %}
 
 {% block navbar_top_content %}
@@ -46,7 +42,5 @@
 %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
 {% endjavascripts %}
-{# <script type="text/javascript" src="//fuelcdn.com/fuelux/2.3.1/loader.min.js"></script> #}
-
 {% endblock footer_javascripts %}     
 

@@ -3,61 +3,16 @@
  * @author Rafael Goulart <rafaelgou@gmail.com>
  */
 
-
-@import '../bootstrap-plugins/typeahead/bootstrap.css';
 /* Body
 -------------------------------------------------- */
-
-html, body {
-    height: 100%;
-}
 body {
     padding-top: 60px;
-    /*padding-bottom: 60px;*/
 }
  
 /* Footer
 -------------------------------------------------- */
-
 .footer {
   text-align: center;
   padding: 30px 0;
   margin-top: 70px;
-  border-top: 1px solid #e5e5e5;
-  background-color: #f5f5f5;
-}
-.footer p {
-  margin-bottom: 0;
-  color: #777;
-}
-.footer-links {
-  margin: 10px 0;
-}
-.footer-links li {
-  display: inline;
-  padding: 0 2px;
-}
-.footer-links li:first-child {
-  padding-left: 0;
-}
-
-/* Sidebar
--------------------------------------------------- */
-.sidebar .icon-chevron-right {
-float: right;
-margin-top: 2px;
-margin-right: -6px;
-opacity: .25;
-}
-
-/* FuelUX Datatable */
-.sortable:hover {
-    cursor: hand;
-}
-.grid-pager input {
-    margin-top: 10px; 
-    text-align: center;
-}
-.grid-controls select{
-    margin: 0;
 }

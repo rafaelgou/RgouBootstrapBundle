@@ -5,6 +5,7 @@
     'bundles/rgoubootstrap/bootstrap/css/bootstrap-theme.min.css'
     'bundles/rgoubootstrap/font-awesome/css/font-awesome.min.css'
     'bundles/rgoubootstrap/chosen/chosen.css'
+    'bundles/rgoubootstrap/bootstrap-plugins/typeahead/bootstrap.css'
     'bundles/rgoubootstrap/css/main.css'
     output='css/compiled.css'
     filter='cssrewrite' 
@@ -40,10 +41,6 @@
         filter='yui_js' 
         output='js/compiled.js'
     %}
-{#
-        'bundles/rgoubootstrap/fuelux/loader.min.js'
-        <script type="text/javascript" src="{{ asset('bundles/rgoubootstrap/bootstrap-plugins/fuelux/loader.js') }}"></script>
-#}
         <script type="text/javascript" src="{{ asset_url }}"></script>
 {% endjavascripts %}
 {% endblock footer_javascripts %}     

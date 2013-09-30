@@ -5,11 +5,11 @@ $(function(){
      */
     $('header').localScroll(3000);
 
-
     /**
      * Chosen activate
      */
     $('.chosen').chosen();
+
     /**
      * Underscore extension for Twitter Bootstrap TypeAhead
      */

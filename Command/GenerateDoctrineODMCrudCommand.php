@@ -22,6 +22,7 @@ use Rgou\BootstrapBundle\Generator\DoctrineCrudODMGenerator;
 use Rgou\BootstrapBundle\Generator\DoctrineFormGenerator;
 use Doctrine\ODM\MongoDB\Mapping\ClassMetadataFactory;
 use Doctrine\ODM\MongoDB\Mapping\ClassMetadata;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 
 /**
  * Generates a CRUD for a Doctrine entity.
@@ -68,7 +69,7 @@ EOT
 
     }
 
-    protected function getGenerator($bundle = null)
+    protected function getGenerator(BundleInterface $bundle = null)
     {
         if (null === $this->generator) {
             $this->generator = new DoctrineCrudODMGenerator($this->getContainer()->get('filesystem'), $this->getContainer());

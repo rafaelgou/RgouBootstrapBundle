@@ -34,3 +34,5 @@ Clear Filters: Limpar Filtros
 'There is an error deleting the record. Check if the record has relationships.': 'Ocorreu um erro ao excluir o registro. Verifique se o registro tem relações.'
 'The record was successfully created.': 'O registro foi criado com sucesso.'
 'The record was successfully created. Create another below.': 'O registro foi criado com sucesso. Crie um novo baixo'
+"There's more <b>%more%</b> record(s) for '%search%'<br/>refine your search": "Há mais <b>%more%</b> registro(s) para '%search%'<br/>refine sua pesquisa"
+"No record found for '%search%'": "Nenhum registro para '%search%'"

@@ -1,7 +1,7 @@
 {% extends 'RgouBootstrapBundle::base.html.twig' %}
 
 {% block head_stylesheets %}
-        <link href="{% block main_boostrap_css %}//netdna.bootstrapcdn.com/twitter-bootstrap/3.0.0/css/bootstrap-combined.no-icons.min.css{% endblock main_boostrap_css %}" type="text/css" rel="stylesheet" media="screen" />
+        <link href="{% block main_boostrap_css %}//netdna.bootstrapcdn.com/twitter-bootstrap/3.0.0/css/bootstrap-combined.no-icons.min.css{% endblock main_boostrap_css %}" type="text/css" rel="stylesheet" media="screen,print" />
         <link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css" type="text/css" rel="stylesheet" media="screen" />
     {% stylesheets
     'bundles/rgoubootstrap/chosen/chosen.css'
@@ -11,7 +11,7 @@
     filter='cssrewrite'
     filter='yui_css'
     %}
-    <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen" />
+    <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen,print" />
     {% endstylesheets %}
 {% endblock head_stylesheets %}
 

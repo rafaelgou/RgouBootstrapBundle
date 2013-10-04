@@ -16,7 +16,7 @@
     {%- for field, metadata in fields %}
 
         <tr>
-            <th>{{ "{{ '" field|capitalize "'|trans }}" }}</th>
+            <th>{{ "{{ '" ~ field|capitalize ~ "'|trans }}" }}</th>
 
         {%- if metadata.type in ['datetimetz', 'datetime'] %}
 
@@ -54,8 +54,6 @@
 {% if ('delete' in actions) and (not hide_delete) %}
 {% include 'views/others/delete_form.html.twig.twig' %}
 {% endif %}
-
-<hr/>
 
 {{ "{% endblock %}" }}
 

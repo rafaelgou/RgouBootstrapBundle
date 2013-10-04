@@ -1,0 +1,122 @@
+
+    /**
+     * Lists all {{ entity }} entities.
+     *
+{% if 'annotation' == format %}
+     * @Route("/search", name="{{ route_name_prefix }}")
+{% endif %}
+     */
+    public function searchAction()
+    {
+
+        $request = $this->getRequest();
+        $data    = array();
+        $search  = $request->get('q');
+
+        $em = $this->getDoctrine()->getManager();
+        $query = $this->getQueryBuilderSearch($search)
+                    ->getQuery();
+
+        if ($request->isXmlHttpRequest()) {
+
+            $paginator  = $this->get('knp_paginator');
+            $pagination = $paginator->paginate($query, 1, 10);
+
+            if ($pagination) {
+                foreach($pagination as $record) {
+                    $data[] = array(
+                        'id'   => $record->getId(),
+                        'label' => (string) $record,
+                    );
+                }
+
+                if ($pagination->getTotalItemCount() > 10) {
+
+                    $more = $pagination->getTotalItemCount() - 10;
+
+                    $data[] = array(
+                        'id'    => 0,
+                        'label'   => $this->get('translator')->trans(
+                            "There's more <b>%more%</b> record(s) for '%search%'<br/>refine your search",
+                            array('%more%' => $more, '%search%' => $search),
+                            'rgoubootstrap'
+                        ),
+                    );
+                }
+
+            }
+
+        }
+
+        if (count($data) == 0) {
+
+            $data[] = array(
+                'id'    => 0,
+                'label'   => $this->get('translator')->trans(
+                    "No record found for '%search%'",
+                    array('%search%' => $search),
+                    'rgoubootstrap'
+                ),
+            );
+
+        }
+
+        $response = new Response(json_encode($data));
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
+    }
+
+    /**
+     * Search QueryBuilder
+     *
+     * @return  Doctrine\ORM\QueryBuilder
+     */
+    public function getQueryBuilderSearch($search)
+    {
+        $fields = array(
+{%- for field, metadata in fields %}
+
+            '{{ field }}',
+{%- endfor %}
+
+        );
+
+        $em = $this->getDoctrine()->getManager();
+
+        $qb = $em->getRepository('{{ bundle }}:{{ entity }}')
+                ->createQueryBuilder('e')
+                ->addOrderBy('e.id', 'ASC');
+
+        $search = explode(' ', $search);
+
+        foreach ($search as $k => $s) {
+
+            $args = array();
+            foreach ($fields as $f) {
+                $param = "{$f}{$k}";
+                $args[] = "\$qb->expr()->like(\"e.{$f}\", \"LOWER(:{$param})\")";
+            }
+
+            $or = '$qb->andWhere($qb->expr()->orX(' . implode(', ', $args) . '));';
+            eval($or);
+
+            foreach ($fields as $f) {
+                $param = "{$f}{$k}";
+                $qb->setParameter("$param", "%{$s}%");
+            }
+        }
+
+        return $qb;
+
+    }
+
+    /**
+     * Search Underscore result template
+     *
+     * @return  Doctrine\ORM\QueryBuilder
+     */
+    public function getSearchResultTemplate()
+    {
+        return '<h5 data-id="<%= id %>"><%= label %></h5>';
+    }

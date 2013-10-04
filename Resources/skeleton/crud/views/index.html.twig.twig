@@ -1,12 +1,19 @@
 {{ "{% extends '" ~ rgou_bootstrap.template ~ "' %}" }}
 
 {{ "{% block headline %}" }}
-{{ entity }} {{ "{{ 'list'|trans({},'rgoubootstrap') }}" }}
+{{ "{% if isSearchActive %}" }}
+
+    <div class="pull-right col-md-4 form-group">
+        <input class="form-control" placeholder="{{ "{{ 'search'|trans({},'rgoubootstrap') }}" }}"  id="{{ route_name_prefix }}_search_input" autocomplete="off" data-provide="typeahead"/>
+    </div>
+{{ "{% endif %}" }}
+
+    {{ entity }} {{ "{{ 'list'|trans({},'rgoubootstrap') }}" }}
     {% if 'new' in actions %}
     <small> 
         {{ "({% transchoice pagination.totalItemCount with {'%count%': pagination.totalItemCount} from 'rgoubootstrap' %}{0}no records|{1}1 record|]1,Inf]%count% records{% endtranschoice %}" }})
         {{ "{{ 'or'|trans({},'rgoubootstrap') }}" }}
-        <a title="{{ "{{ 'New'|trans({},'rgoubootstrap') }}" }}" class="btn btn-default btn-default btn-xs" href="{{ "{{ path('"~ route_name_prefix ~"_new') }}" }}">
+        <a title="{{ "{{ 'New'|trans({},'rgoubootstrap') }}" }}" class="btn btn-default btn-default btn-xs" href="{{ "{{ path('" ~ route_name_prefix ~ "_new') }}" }}">
         <i class="icon-plus icon-white"></i> {{ "{{ 'New'|trans({},'rgoubootstrap') }}" }}
         </a>
     </small>
@@ -20,7 +27,7 @@
         <tr>
         {%- for field, metadata in fields %}
 
-            <th>{{ "{{ '" ~ field|capitalize ~ "'|trans }}" }}</th>
+            <th>{{ "{{ '" ~ field|titleize ~ "'|trans }}" }}</th>
 
         {%- endfor %}
 
@@ -34,27 +41,27 @@
     {%- for field, metadata in fields %}
         {%- if loop.first and ('show' in actions) %}
 
-            <td><a href="{{ "{{ path('"~ route_name_prefix ~"_show', { 'id': record.id }) }}" }}">{{ '{{ record.'~ field|replace({'_': ''}) ~' }}' }}</a></td>
+            <td><a href="{{ "{{ path('" ~ route_name_prefix ~ "_show', { 'id': record.id }) }}" }}">{{ '{{ record.' ~ field|replace({'_': ''}) ~ ' }}' }}</a></td>
 
         {%- elseif metadata.type in ['datetimetz', 'datetime'] %}
 
-            <td>{{ '{% if record.'~ field|replace({'_': ''}) ~' %}{{ record.'~ field|replace({'_': ''}) ~'|date(\'Y-m-d H:i:s\') }}{% endif %}' }}</td>
+            <td>{{ '{% if record.' ~ field|camelize ~ ' %}{{ record.' ~ field|replace({'_': ''}) ~ '|date(\'Y-m-d H:i:s\') }}{% endif %}' }}</td>
 
         {%- elseif metadata.type == 'date' %}
 
-            <td>{{ '{% if record.'~ field|replace({'_': ''}) ~' %}{{ record.'~ field|replace({'_': ''}) ~'|date(\'Y-m-d\') }}{% endif %}' }}</td>
+            <td>{{ '{% if record.' ~ field|camelize ~ ' %}{{ record.' ~ field|replace({'_': ''}) ~ '|date(\'Y-m-d\') }}{% endif %}' }}</td>
 
         {%- elseif metadata.type == 'time' %}
 
-            <td>{{ '{% if record.'~ field|replace({'_': ''}) ~' %}{{ record.'~ field|replace({'_': ''}) ~'|date(\'H:i:s\') }}{% endif %}' }}</td>
+            <td>{{ '{% if record.' ~ field|camelize ~ ' %}{{ record.' ~ field|replace({'_': ''}) ~ '|date(\'H:i:s\') }}{% endif %}' }}</td>
 
         {%- elseif metadata.type == 'boolean' %}
 
-            <td><i class="{{ '{{ record.'~ field|replace({'_': ''}) ~' ? \'icon-check\' : \'\' }}' }}"></i></td>
+            <td><i class="{{ '{{ record.' ~ field|camelize ~ ' ? \'icon-check\' : \'\' }}' }}"></i></td>
 
         {%- else %}
 
-            <td>{{ '{{ record.'~ field|replace({'_': ''}) ~' }}' }}</td>
+            <td>{{ '{{ record.' ~ field|camelize ~ ' }}' }}</td>
 
         {%- endif %}
 
@@ -77,4 +84,25 @@
     {{ "{{ knp_pagination_render(pagination) }}" }}
 </div>
 
-{{ "{% endblock %}" }}
+{{ "{% endblock content %}" }}
+
+{{ "{% block javascripts %}" }}
+{{ "{% if isSearchActive %}" }}
+<script type="text/javascript">
+$(function(){
+    $( "#{{ route_name_prefix }}_search_input" ).typeahead({
+        name: '{{ route_name_prefix }}s',
+        remote: '{{ "{{ path('" ~ route_name_prefix ~ "_search') }}" }}' + '?q=%QUERY',
+        valueKey: 'label',
+        template: ['{{ "{{ searchResultTemplate | raw }}" }}',].join(''),
+        engine: _,
+        minLength: 3,
+    }).on('typeahead:selected', function(event, datum) {
+        path = '{{ "{{ path('" ~ route_name_prefix ~"_show', {'id': '-id-'}) }}" }}';
+        path = path.replace('-id-', datum.id);
+        window.location.href= path;
+    });
+});
+</script>
+{{ "{% endif %}" }}
+{{ "{% endblock javascripts %}" }}

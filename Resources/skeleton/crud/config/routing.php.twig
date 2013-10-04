@@ -11,6 +11,12 @@ $collection->add('{{ route_name_prefix }}', new Route('/', array(
 )));
 {% endif %}
 
+{% if 'search' in actions %}
+$collection->add('{{ route_name_prefix }}_search', new Route('/search', array(
+    '_controller' => '{{ bundle }}:{{ entity }}:search',
+)));
+{% endif %}
+
 {% if 'show' in actions %}
 $collection->add('{{ route_name_prefix }}_show', new Route('/{id}/show', array(
     '_controller' => '{{ bundle }}:{{ entity }}:show',

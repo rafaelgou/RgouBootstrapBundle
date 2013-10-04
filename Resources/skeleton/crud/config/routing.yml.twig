@@ -4,6 +4,12 @@
     defaults: { _controller: "{{ bundle }}:{{ entity }}:index" }
 {% endif %}
 
+{% if 'search' in actions %}
+{{ route_name_prefix }}_search:
+    pattern:  /search
+    defaults: { _controller: "{{ bundle }}:{{ entity }}:search" }
+{% endif %}
+
 {% if 'show' in actions %}
 {{ route_name_prefix }}_show:
     pattern:  /{id}/show

@@ -8,6 +8,10 @@
         <default key="_controller">{{ bundle }}:{{ entity }}:index</default>
     </route>
 
+    <route id="{{ route_name_prefix }}_search" pattern="/search">
+        <default key="_controller">{{ bundle }}:{{ entity }}:search</default>
+    </route>
+
     <route id="{{ route_name_prefix }}_show" pattern="/{id}/show">
         <default key="_controller">{{ bundle }}:{{ entity }}:show</default>
     </route>

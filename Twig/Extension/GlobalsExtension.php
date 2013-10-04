@@ -109,4 +109,6 @@ class GlobalsExtension extends \Twig_Extension
     {
         return 'rgou_bootstrap';
     }
+
 }
+

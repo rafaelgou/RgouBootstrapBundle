@@ -14,6 +14,7 @@ namespace Rgou\BootstrapBundle\Command;
 use Rgou\BootstrapBundle\Generator\DoctrineCrudGenerator;
 use Sensio\Bundle\GeneratorBundle\Command\GenerateDoctrineCrudCommand as BaseGenerateDoctrineCrudCommand;
 use Sensio\Bundle\GeneratorBundle\Generator\DoctrineFormGenerator;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 
 /**
  * Generates a CRUD for a Doctrine entity.
@@ -49,7 +50,7 @@ EOT
             );
     }
 
-    protected function getGenerator($bundle = null)
+    protected function getGenerator(BundleInterface $bundle = null)
     {
         if (null === $this->generator) {
             $this->generator = new DoctrineCrudGenerator($this->getContainer()->get('filesystem'), $this->getContainer());

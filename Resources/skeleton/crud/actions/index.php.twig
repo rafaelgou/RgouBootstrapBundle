@@ -23,11 +23,11 @@
         
 {% if 'annotation' == format %}
         return array(
-            pagination' => $pagination
-        );
 {% else %}
         return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:index.html.twig', array(
-            'pagination' => $pagination
-        ));
 {% endif %}
+            'pagination'           => $pagination,
+            'isSearchActive'       => false,
+            'searchResultTemplate' => $this->getSearchResultTemplate(),
+        ));
     }

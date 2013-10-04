@@ -10,12 +10,12 @@ services:
         class: Rgou\BootstrapBundle\Util\MongoDB
         arguments: ["@sonata.intl.templating.helper.datetime", "@sonata.intl.templating.helper.number"]        
   
-    rgou_bootstrap.twig.globals:
+    rgou_bootstrap.twig.rgou.extension:
         class: Rgou\BootstrapBundle\Twig\Extension\GlobalsExtension
         arguments: ["@service_container"]        
         tags:
-            - { name: twig.extension }  
-  
+            - { name: twig.extension }
+
     rgou_bootstrap.menu_builder:
         class: Rgou\BootstrapBundle\Menu\MenuBuilder
         arguments: ["@knp_menu.factory"]

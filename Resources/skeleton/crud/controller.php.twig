@@ -3,6 +3,7 @@
 namespace {{ namespace }}\Controller{{ entity_namespace ? '\\' ~ entity_namespace : '' }};
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
 {% if 'annotation' == format -%}
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -30,6 +31,10 @@ class {{ entity_class }}Controller extends Controller
 
     {%- if 'show' in actions %}
         {%- include 'actions/show.php.twig' %}
+    {%- endif %}
+
+    {%- if 'search' in actions %}
+        {%- include 'actions/search.php.twig' %}
     {%- endif %}
 
     {%- if 'new' in actions %}

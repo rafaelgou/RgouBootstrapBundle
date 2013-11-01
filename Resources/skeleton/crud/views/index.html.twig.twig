@@ -87,6 +87,7 @@
 {{ "{% endblock content %}" }}
 
 {{ "{% block javascripts %}" }}
+{{ "{{ parent() }}" }}
 {{ "{% if isSearchActive %}" }}
 <script type="text/javascript">
 $(function(){
